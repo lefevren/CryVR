@@ -5,26 +5,15 @@ CryVR push CryEngine to virtual reality !
 
 CryVR gives CryEngine (since 3.5.4 both x86 & x64) virtual reality possibilities such as :
   
-  * Connections :
---VRPN integration
-      ** VPRN connections (Tracker / Analog / Button)
-      ** UDP connections (console control / message sender & listener)
+  * Connections : VRPN integration (Tracker / Analog / Button), UDP connections (console control / message sender & listener)
   
-  * Controlers :
---Wiiuse integration & Wiimote device (VRPN and direct connect)
-      ** Android device control (UDP)
-      ** Flystick or any other device with VRPN
+  * Controlers : Wiiuse integration, Android device control, Flystick or any other device with VRPN
       
-  * Camera :
-      ** 3D coordinates to 2D coordinates
-      ** Simple asymetric camera setup
-      ** Cave system setup
+  * Camera : 3D coordinates to 2D coordinates, Simple asymetric camera setup, Cave system setup
   
-  * Trackers :
-      ** Vicon datastream (direct connect or VRPN)
+  * Trackers : Vicon datastream (direct connect or VRPN)
       
-  * Network :
-      ** Dead Reckoning Entity 
+  * Network : Dead Reckoning Entity 
   
 
 
