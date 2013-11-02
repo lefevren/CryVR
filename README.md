@@ -15,7 +15,7 @@ CryVR gives CryEngine (since 3.5.4 both x86 & x64) virtual reality possibilities
       
   * Network : Dead Reckoning Entity 
   
-
+  * Filters : One euro filter
 
 Version 0.1 (to come)
 ======================
@@ -25,6 +25,7 @@ Initial version.
 - Wiiuse integration (x86 and x64 lib and dll in vs2012 version)
 - VRPN integration (x86 and x64 lib and dll in vs2012 version)
 - 3D to 2D coordinates flownode
+- One euro filter integration (filtering noise for float, vec2, vec3 and quaternion)
 
 
 Infos
