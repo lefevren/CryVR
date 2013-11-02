@@ -22,9 +22,9 @@ Version 0.1 (to come)
 
 Initial version.
 
-- Wiiuse integration.
-- VRPN integration.
-- 3D to 2D coordinates
+- Wiiuse integration (x86 and x64 lib and dll in vs2012 version)
+- VRPN integration (x86 and x64 lib and dll in vs2012 version)
+- 3D to 2D coordinates flownode
 
 
 Infos
