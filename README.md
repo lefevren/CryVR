@@ -29,7 +29,8 @@ Initial version. (Unstable !)
 - Asymetric camera setup (3x nodes)
 - Wiimote controler (8x nodes)
 - 3D to 2D coordinates (1x node)
-- One euro filter integration (filtering noise for float, vec2, vec3 and quaternion) (4x nodes)
+
+- One euro filter integration (filtering noise for float, vec2, vec3 and quaternion) (4x nodes) => Unstable due to large use of custom console vars.
 
 
 Included library
