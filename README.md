@@ -1,8 +1,6 @@
 CryVR
 =====
 
-*** NOTE : Unstable initial version ***
-
 CryVR push CryEngine to virtual reality !
 
 CryVR gives CryEngine (since 3.5.4 both x86 & x64) virtual reality possibilities such as :
@@ -19,17 +17,9 @@ CryVR gives CryEngine (since 3.5.4 both x86 & x64) virtual reality possibilities
   
   * Filters : One euro filter
 
-Version 0.1
-======================
-
-Initial version. (Unstable !)
 
 
-- VRPN tracker and wiimote (2x nodes) => working but need some refactoring
-- Asymetric camera setup (3x nodes) => working but need some refactoring
-- Wiimote controler (8x nodes) => working but need some refactoring
-- 3D to 2D coordinates (1x node) => working but need some refactoring
-- One euro filter integration (filtering noise for float, vec2, vec3 and quaternion) (4x nodes) => Unstable due to large use of custom console vars.
+
 
 
 Included library
