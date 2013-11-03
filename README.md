@@ -25,8 +25,7 @@ Version 0.1
 Initial version. (Unstable !)
 
 
-- VRPN tracker (1x node)
-- VRPN Wiimote (1x node)
+- VRPN tracker and wiimote (2x nodes)
 - Asymetric camera setup (3x nodes)
 - Wiimote controler (8x nodes)
 - 3D to 2D coordinates (1x node)
