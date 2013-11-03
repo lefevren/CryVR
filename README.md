@@ -26,6 +26,7 @@ Initial version. (Unstable !)
 
 
 - VRPN tracker (1x node)
+- VRPN Wiimote (1x node)
 - Asymetric camera setup (3x nodes)
 - Wiimote controler (8x nodes)
 - 3D to 2D coordinates (1x node)
@@ -48,7 +49,10 @@ More
 ====
 
 - One euro filter : Algorithm based on the C++ version of [One euro filter] (http://www.lifl.fr/~casiez/1euro/). This filter help to smooth raw data from VRPN server or Wiimote controler. 4x nodes to smooth float, vec2, vec3 and quaternion values.
-- Wiimote nodes :  Wiimote Manager node, Wiimote controler node, Battery Level node, IR and Motion Sensing nodes, Rumble node.
+- Wiimote nodes :  Wiimote Manager node, Wiimote controler node, Battery Level node, IR and Motion Sensing nodes, Rumble node. Wiimote nodes drop down fps from about ~20%.
+- VRPN : Need a VRPN server to connect. If the server bring wiimote controler, then VRPNWiimote can be used. 
+
+
 
 
 
