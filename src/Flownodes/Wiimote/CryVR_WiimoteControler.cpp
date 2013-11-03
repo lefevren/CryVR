@@ -1,11 +1,11 @@
-/* Test d'optimisation et de rapidité */
+/* Wiimote Controler node - for licensing and copyright see license.txt */
 
 #include "StdAfx.h"
 #include "Nodes/G2FlowBaseNode.h"
 #include "Actor.h"
 
-#include "wiiuse.h" 
-#include "CryVR_WiimoteManager.h"
+#include "Wiiuse/wiiuse.h" 
+#include "Wiimote/CryVR_WiimoteManager.h"
 
 
 class CryVR_WiimoteControler : public CFlowBaseNode<eNCT_Instanced>

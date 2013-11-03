@@ -1,10 +1,8 @@
+/* One Euro Filter - for licensing and copyright see license.txt */
+
 #include "StdAfx.h"
 #include "Nodes/G2FlowBaseNode.h"
 #include "Actor.h"
-#include "VR/OneEuroFilter.h"
+#include "Filters/OneEuroFilter.h"
 
-/*
-double OneEuroFilter::filter(double value) {
-	
-};
-*/
+

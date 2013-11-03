@@ -1,3 +1,5 @@
+/* Low pass filter header - for licensing and copyright see license.txt */
+
 #include "StdAfx.h"
 
 typedef double TimeStamp ; // in seconds

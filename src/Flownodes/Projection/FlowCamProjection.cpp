@@ -1,3 +1,5 @@
+/* Camera projection node - for licensing and copyright see license.txt */
+
 #include "StdAfx.h"
 #include "Nodes/G2FlowBaseNode.h"
 #include "Actor.h"

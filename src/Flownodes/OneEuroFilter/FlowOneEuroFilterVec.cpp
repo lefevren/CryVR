@@ -1,7 +1,9 @@
+/* Onde Euro Filter vec3 node - for licensing and copyright see license.txt */
+
 #include "StdAfx.h"
 #include "Nodes/G2FlowBaseNode.h"
 #include "Actor.h"
-#include "VR/OneEuroFilter.h"
+#include "Filters/OneEuroFilter.h"
 
 class CFlowOneEuroFilterVec : public CFlowBaseNode<eNCT_Instanced>
 {
@@ -12,8 +14,8 @@ class CFlowOneEuroFilterVec : public CFlowBaseNode<eNCT_Instanced>
 	
 	enum EInputPorts
 	{
+		ACTIVE,
 		IN_Value,
-		
 	};
 
 	enum EOutputPorts
@@ -22,7 +24,8 @@ class CFlowOneEuroFilterVec : public CFlowBaseNode<eNCT_Instanced>
 	};
 
 public:
-	
+	bool active;
+
 	////////////////////////////////////////////////////
 	CFlowOneEuroFilterVec(SActivationInfo *pActInfo){}
 	////////////////////////////////////////////////////
@@ -64,23 +67,24 @@ public:
 		{
 		case eFE_Initialize:
 			{
-				
 				oef_x = new OneEuroFilter ();
 				oef_y = new OneEuroFilter ();
 				oef_z = new OneEuroFilter ();
-
-				pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
 			}
+			break;
 		case eFE_Activate:
 			{
-				
-				//CryLogAlways("Activation EuroFilter"); 
-				pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
+				if ( IsPortActive( pActInfo, ACTIVE ) ){
+					active = GetPortBool( pActInfo, ACTIVE);
+					pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
+				}
 			}
 			break;
 		
 		case eFE_Update:
 			{
+				if(!active) return;
+
 				oef_x->increaseTimeStamp(1.0/oef_x->getFrequence());
 				oef_y->increaseTimeStamp(1.0/oef_y->getFrequence());
 				oef_z->increaseTimeStamp(1.0/oef_z->getFrequence());
@@ -99,7 +103,6 @@ public:
 	virtual void GetMemoryStatistics(ICrySizer *s){s->Add(*this);}
 	virtual IFlowNodePtr Clone(SActivationInfo *pActInfo){return new CFlowOneEuroFilterVec(pActInfo);}
 	virtual void GetMemoryUsage(ICrySizer * s) const{s->Add(*this);}
-
 
 };
 

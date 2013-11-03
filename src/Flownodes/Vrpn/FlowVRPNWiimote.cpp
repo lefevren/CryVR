@@ -1,30 +1,27 @@
+/* VRPN Wiimote node - for licensing and copyright see license.txt */
+
 #include "StdAfx.h"
 #include "Nodes/G2FlowBaseNode.h"
 #include "Actor.h"
 
 
-#include "vrpn_Tracker.h"
-#include "vrpn_Button.h"
-#include "vrpn_Analog.h"
-#include "vrpn_WiiMote.h"
-//FlowAsymmetricCamera.cpp
+#include "vrpn/vrpn_Tracker.h"
+#include "vrpn/vrpn_Button.h"
+#include "vrpn/vrpn_Analog.h"
+#include "vrpn/vrpn_WiiMote.h"
+
 
 
 const string VRPNSERVER = "tracker0@localhost";
 	
-void VRPN_CALLBACK handle_analog_wii(void* userData, const vrpn_ANALOGCB a ){
-	*(vrpn_ANALOGCB*)userData=a;
-}
-		
-	
-void VRPN_CALLBACK handle_button_change_wii( void* userData, const vrpn_BUTTONCB b ){
-	*(vrpn_BUTTONCB*)userData = b;
-}
+void VRPN_CALLBACK handle_analog_wii(void* userData, const vrpn_ANALOGCB a ){*(vrpn_ANALOGCB*)userData=a;}
+void VRPN_CALLBACK handle_button_change_wii( void* userData, const vrpn_BUTTONCB b ){*(vrpn_BUTTONCB*)userData = b;}
 
 class CFlowNode_VRPNWiimote : public CFlowBaseNode<eNCT_Instanced>
 {
 	enum EInputPorts
 	{
+		ACTIVE,
 		SERVER,
 	};
 
@@ -60,12 +57,11 @@ class CFlowNode_VRPNWiimote : public CFlowBaseNode<eNCT_Instanced>
 
 public:
 	
+	bool active;
 	vrpn_Analog_Remote * vrpn_analog_remote;
 	vrpn_ANALOGCB * vrpn_analog;
 	vrpn_Button_Remote * vrpn_buttons_remote;
 	vrpn_BUTTONCB * vrpn_buttons;// = new vrpn_BUTTONCB[5];
-
-
 
 	CFlowNode_VRPNWiimote(SActivationInfo *pActInfo){}
 	virtual ~CFlowNode_VRPNWiimote(void){}
@@ -78,7 +74,7 @@ public:
 		static const SInputPortConfig inputs[] =
 		{
 			InputPortConfig<string>("VRPNServer",VRPNSERVER, _HELP("Connexion à un server VRPN")),
-			InputPortConfig_Null(),
+			{0},
 		};
 
 		// Define output ports here, in same order as EOutputPorts
@@ -115,7 +111,7 @@ public:
 			OutputPortConfig<float>("Gravity Y", _HELP("Debug message from multiplayer setup")),
 			OutputPortConfig<float>("Gravity Z", _HELP("Debug message from multiplayer setup")),
 			
-			OutputPortConfig_Null(),
+			{0},
 		};
 		
 		// Fill in configuration
@@ -129,48 +125,36 @@ public:
 	virtual void ProcessEvent(EFlowEvent event, SActivationInfo *pActInfo)
 	{
 		
-		//void * chaineRow0 = (void*)malloc(40*sizeof(vrpn_float64)) ;
-		//char * chaine = (char*)malloc(1024*sizeof(vrpn_float64)) ;
-
+		
 		int butt= 0;
 
 		switch (event)
 		{
-		case eFE_Initialize:{
-			vrpn_analog = (vrpn_ANALOGCB *) malloc(sizeof(vrpn_ANALOGCB)*2);
-			vrpn_analog_remote = new vrpn_Analog_Remote(GetPortString(pActInfo, 0));
-			vrpn_analog_remote->register_change_handler(vrpn_analog,handle_analog_wii);
+		case eFE_Initialize:
+			{
+				vrpn_analog = (vrpn_ANALOGCB *) malloc(sizeof(vrpn_ANALOGCB)*2);
+				vrpn_analog_remote = new vrpn_Analog_Remote(GetPortString(pActInfo, 1));
+				vrpn_analog_remote->register_change_handler(vrpn_analog,handle_analog_wii);
 			
-			vrpn_buttons = (vrpn_BUTTONCB *) malloc(sizeof(vrpn_BUTTONCB)*2);
-			vrpn_buttons_remote = new vrpn_Button_Remote(GetPortString(pActInfo, 0));
-			vrpn_buttons_remote->register_change_handler(vrpn_buttons,handle_button_change_wii);
-			
-			string temp1 = "Initialisation";
-			CryLogAlways("%s", temp1);
-			
-		}
+				vrpn_buttons = (vrpn_BUTTONCB *) malloc(sizeof(vrpn_BUTTONCB)*2);
+				vrpn_buttons_remote = new vrpn_Button_Remote(GetPortString(pActInfo, 1));
+				vrpn_buttons_remote->register_change_handler(vrpn_buttons,handle_button_change_wii);
+			}
+			break;
 		case eFE_Activate:
 			{
-				if (vrpn_analog_remote){
-					vrpn_analog_remote->mainloop();
-					string temp1 = "Activation Analog";
-					CryLogAlways("%s", temp1);
+				if ( IsPortActive( pActInfo, ACTIVE ) ){
+					active = GetPortBool( pActInfo, ACTIVE);
 					pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
 				}
-
-				if (vrpn_buttons_remote){
-					vrpn_buttons_remote->mainloop();
-					ActivateOutput(pActInfo, (int)vrpn_buttons->button,(int)vrpn_buttons->state);
-					string temp1 = "Activation Buttons";
-					CryLogAlways("%s", temp1);
-					
-				}
-				pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
+				
 			}
 			break;
 		
 		case eFE_Update:
 			{	
+				if (!active) return ;
+
 				if (vrpn_analog_remote){
 					vrpn_analog_remote->mainloop();
 					float angleJoystick = (float)vrpn_analog->channel[19];
@@ -185,9 +169,6 @@ public:
 					float gravity_y = (float)vrpn_analog->channel[2];
 					float gravity_z = (float)vrpn_analog->channel[3];
 
-
-					//for(int i=0;i<20;i++){	CryLogAlways("canal %i %f",i,(float)vrpn_analog->channel[i]);	}
-
 					ActivateOutput(pActInfo, WII_WIIMOTE_GRAVITY_X,gravity_x);
 					ActivateOutput(pActInfo, WII_WIIMOTE_GRAVITY_Y,gravity_y);
 					ActivateOutput(pActInfo, WII_WIIMOTE_GRAVITY_Z,gravity_z);
@@ -198,9 +179,6 @@ public:
 					vrpn_buttons_remote->mainloop();
 					ActivateOutput(pActInfo,(int)vrpn_buttons->button, (int)vrpn_buttons->state);
 				}
-
-				
-
 			}
 		}
 	}

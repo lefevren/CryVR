@@ -1,12 +1,11 @@
+/* Wiimote node - for licensing and copyright see license.txt */
+
 #include "StdAfx.h"
 #include "Nodes/G2FlowBaseNode.h"
 #include "Actor.h"
+#include "Wiiuse/wiiuse.h" 
 
 
-#include "wiiuse.h" 
-
-//Ne fonctionne pas en 64 bits ! Pas de Wiiusex64.lib disponible...
-//FlowAsymmetricCamera.cpp
 
 #define MAX_WIIMOTES				4
 
@@ -46,19 +45,12 @@ public:
 	
 	////////////////////////////////////////////////////
 	CFlowWiimoteControler(SActivationInfo *pActInfo){
-		//wiiuse_cleanup(wiimotes, MAX_WIIMOTES);
+		
 	}
 	
 	////////////////////////////////////////////////////
 	virtual ~CFlowWiimoteControler(void){
-		CryLogAlways("Suppression");
-		/*
-		if (wiimotes){
-			if (wiimotes[0]){
-				wiiuse_cleanup(wiimotes, 1);
-			}
-		}
-		*/
+		
 	}
 
 	////////////////////////////////////////////////////
@@ -99,16 +91,14 @@ public:
 			OutputPortConfig<bool>("Z", _HELP("")),
 			OutputPortConfig<Vec3>("NUNCHUK_RPY", _HELP("Nunchuk Roll pitch yaw vec3")),
 			OutputPortConfig<Vec3>("NUNCHUK_JOY", _HELP("Nunchuk Joystick vec3")),
-			
-			
-			
 			{ 0 },
+
 		};
 		
 		// Fill in configuration
 		config.pInputPorts = inputs;
 		config.pOutputPorts = outputs;
-		config.sDescription = _HELP("FG node that sets up a CAVE environment");
+		config.sDescription = _HELP("FG node that retrieve values from wiimote");
 		config.SetCategory(EFLN_APPROVED);
 	}
 
@@ -125,7 +115,6 @@ public:
 		switch (event)
 		{
 		case eFE_Initialize:{
-			//Sleep(3000);
 			wiimotes = wiiuse_init(1); 
 			found = wiiuse_find(wiimotes, 1, 5);
 			if (found!=0) handle_ctrl_status(wiimotes[0]);
@@ -143,29 +132,7 @@ public:
 		}
 		case eFE_Activate:
 			{	
-
-				//Sleep(3000);
-
-				//wiimotes = wiiuse_init(1); 
-				//found = wiiuse_find(wiimotes, 1, 5);
-				//if (found==0) CryLogAlways("No wiimotes found.\n");
 				
-				/*
-				connected = wiiuse_connect(wiimotes, 1);
-				if (connected) CryLogAlways("Connected to %i wiimotes (of %i found).\n", connected, found);
-				else CryLogAlways("Failed to connect to any wiimote.\n");
-				wiiuse_set_leds(wiimotes[0], WIIMOTE_LED_1);
-
-				wiiuse_motion_sensing(wiimotes[0], 1);
-				wiiuse_set_ir(wiimotes[0], 1);
-				//WIIUSE_USING_EXP(wiimotes[0]);
-				//WIIUSE_U
-
-				//wiimotes[0]->exp.type = EXP_NUNCHUK;
-				
-				*/
-				
-
 				pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
 			}
 			break;
@@ -178,12 +145,6 @@ public:
 				//Ne change rien ! juste qu'on a un retour d'IR
 				//handle_ctrl_status(wiimotes[0]);
 				CryLogAlways("attachment:      %i",wm->exp.type);
-
-				/*
-
-				Gestion des evts
-
-				*/
 
 				
 				

@@ -1,7 +1,9 @@
+/* Onde Euro Filter float node - for licensing and copyright see license.txt */
+
 #include "StdAfx.h"
 #include "Nodes/G2FlowBaseNode.h"
 #include "Actor.h"
-#include "VR/OneEuroFilter.h"
+#include "filters/OneEuroFilter.h"
 
 class CFlowOneEuroFilter : public CFlowBaseNode<eNCT_Instanced>
 {
@@ -9,10 +11,7 @@ class CFlowOneEuroFilter : public CFlowBaseNode<eNCT_Instanced>
 
 	enum EInputPorts
 	{
-		//PARAM_Freq,
-		//PARAM_MinCutOff,
-		//PARAM_Beta,
-		//PARAM_DCutOff,
+		ACTIVE,
 		IN_Value,
 	};
 
@@ -23,6 +22,8 @@ class CFlowOneEuroFilter : public CFlowBaseNode<eNCT_Instanced>
 
 public:
 	
+	bool active;
+
 	////////////////////////////////////////////////////
 	CFlowOneEuroFilter(SActivationInfo *pActInfo){}
 	////////////////////////////////////////////////////
@@ -40,6 +41,8 @@ public:
 			//InputPortConfig<float> ("MinCutOff",1.0, _HELP("Min cut Off")),
 			//InputPortConfig<float> ("beta",1.0, _HELP("?")),
 			//InputPortConfig<float> ("DCutOff",1.0, _HELP("Derivate Cut Off ?")),
+			InputPortConfig<bool> ("Activate",true, _HELP("Activation")),
+			
 			InputPortConfig<float> ("Valeur",1.0, _HELP("Valeur a filtrer")),
 			{0},
 		};
@@ -68,39 +71,33 @@ public:
 		{
 		case eFE_Initialize:
 			{
-				
-				//float frequence_ = GetPortFloat(pActInfo,PARAM_Freq);
-				//float mincutoff_ = GetPortFloat(pActInfo,PARAM_MinCutOff);
-				//float beta__ = 	GetPortFloat(pActInfo,PARAM_Beta);
-				//float dcutoff_ = GetPortFloat(pActInfo,PARAM_DCutOff);
-
-
-				//oef = new OneEuroFilter (frequence_,mincutoff_,beta__,dcutoff_);
 				oef = new OneEuroFilter ();
-				pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
+			
 			}
+			break;
 		case eFE_Activate:
 			{
-				
-				//CryLogAlways("Activation EuroFilter"); 
-				pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
+				if ( IsPortActive( pActInfo, ACTIVE ) ){
+					active = GetPortBool( pActInfo, ACTIVE);
+					pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
+				}
 			}
 			break;
 		
 		case eFE_Update:
 			{
+				if(!active) return;
+
 				oef->increaseTimeStamp(1.0/oef->getFrequence());
 				float valeur =  GetPortFloat(pActInfo, IN_Value);
 				float filtered = (float)oef->filter(valeur) ;
-				
 				ActivateOutput(pActInfo, OUT_Value,filtered);
 			}
 		}
 	}
 
 	////////////////////////////////////////////////////
-	virtual void GetMemoryStatistics(ICrySizer *s)
-	{
+	virtual void GetMemoryStatistics(ICrySizer *s){
 		s->Add(*this);
 	}
 
@@ -113,10 +110,7 @@ public:
 	virtual void GetMemoryUsage(ICrySizer * s) const
 	{
 		s->Add(*this);
-		
 	}
-
-
 };
 
 

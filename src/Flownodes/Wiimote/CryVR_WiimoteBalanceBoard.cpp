@@ -1,11 +1,11 @@
-/* Test d'optimisation et de rapidité */
+/* Wii Balance Board node - for licensing and copyright see license.txt */
 
 #include "StdAfx.h"
 #include "Nodes/G2FlowBaseNode.h"
 #include "Actor.h"
 
-#include "wiiuse.h" 
-#include "CryVR_WiimoteManager.h"
+#include "Wiiuse/wiiuse.h" 
+#include "Wiimote/CryVR_WiimoteManager.h"
 
 
 class CryVR_WiimoteBalanceBoard : public CFlowBaseNode<eNCT_Instanced>
@@ -73,7 +73,7 @@ public:
 		// Fill in configuration
 		config.pInputPorts = inputs;
 		config.pOutputPorts = outputs;
-		config.sDescription = _HELP("FG node that sets up a CAVE environment");
+		config.sDescription = _HELP("FG node that retrieve values from Wii Balance Board");
 		config.SetCategory(EFLN_APPROVED);
 	}
 

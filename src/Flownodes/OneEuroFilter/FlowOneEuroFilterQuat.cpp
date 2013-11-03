@@ -1,7 +1,9 @@
+/* Onde Euro Filter quaternion node - for licensing and copyright see license.txt */
+
 #include "StdAfx.h"
 #include "Nodes/G2FlowBaseNode.h"
 #include "Actor.h"
-#include "VR/OneEuroFilter.h"
+#include "Filters/OneEuroFilter.h"
 
 class CFlowOneEuroFilterQuat : public CFlowBaseNode<eNCT_Instanced>
 {
@@ -12,8 +14,10 @@ class CFlowOneEuroFilterQuat : public CFlowBaseNode<eNCT_Instanced>
 	
 	enum EInputPorts
 	{
+		ACTIVE,
 		IN_Value,
 		IN_Value_w,
+		
 	};
 
 	enum EOutputPorts
@@ -23,6 +27,7 @@ class CFlowOneEuroFilterQuat : public CFlowBaseNode<eNCT_Instanced>
 	};
 
 public:
+	bool active;
 	
 	////////////////////////////////////////////////////
 	CFlowOneEuroFilterQuat(SActivationInfo *pActInfo){
@@ -41,7 +46,7 @@ public:
 		{
 			InputPortConfig<Vec3> ("Valeur_x_y_z",Vec3(0,0,0), _HELP("Valeur a filtrer")),
 			InputPortConfig<float> ("Valeur_w",0, _HELP("Valeur a filtrer")),
-			InputPortConfig_Null(),
+			{0},
 		};
 
 		// Define output ports here, in same order as EOutputPorts
@@ -49,7 +54,7 @@ public:
 		{
 			OutputPortConfig<Vec3> ("Valeur_filtre_x_y_z", _HELP("Fov courrant")),
 			OutputPortConfig<float> ("Valeur_filtre_w", _HELP("Fov courrant")),
-			OutputPortConfig_Null(),
+			{0},
 		};
 		
 		// Fill in configuration
@@ -66,8 +71,6 @@ public:
 	virtual void ProcessEvent(EFlowEvent event, SActivationInfo *pActInfo)
 	{	
 
-		
-
 		switch (event)
 		{
 		case eFE_Initialize:
@@ -78,18 +81,22 @@ public:
 				oef_y = new OneEuroFilter ();
 				oef_z = new OneEuroFilter ();
 
-				pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
 			}
+			break;
 		case eFE_Activate:
 			{
-				
-				//CryLogAlways("Activation EuroFilter"); 
-				pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
+				if ( IsPortActive( pActInfo, ACTIVE ) ){
+					active = GetPortBool( pActInfo, ACTIVE);
+					pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
+				}
+
 			}
 			break;
 		
 		case eFE_Update:
 			{
+				if(!active) return;
+
 				oef_w->increaseTimeStamp(1.0/oef_w->getFrequence());
 				oef_x->increaseTimeStamp(1.0/oef_x->getFrequence());
 				oef_y->increaseTimeStamp(1.0/oef_y->getFrequence());
@@ -127,7 +134,6 @@ public:
 	virtual void GetMemoryUsage(ICrySizer * s) const
 	{
 		s->Add(*this);
-		
 	}
 
 

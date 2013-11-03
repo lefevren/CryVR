@@ -1,11 +1,11 @@
-/* Test d'optimisation et de rapidité */
+/* Wiimote Motion Sensing node - for licensing and copyright see license.txt */
 
 #include "StdAfx.h"
 #include "Nodes/G2FlowBaseNode.h"
 #include "Actor.h"
 
-#include "wiiuse.h" 
-#include "CryVR_WiimoteManager.h"
+#include "Wiiuse/wiiuse.h" 
+#include "Wiimote/CryVR_WiimoteManager.h"
 
 
 class CryVR_WiimoteMotionSensing : public CFlowBaseNode<eNCT_Instanced>
@@ -70,7 +70,5 @@ public:
 
 };
 
-
-	
 REGISTER_FLOW_NODE("CryVR:Controlers:WiimoteMotionSensing",  CryVR_WiimoteMotionSensing);
 

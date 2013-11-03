@@ -1,6 +1,8 @@
+/* Wiimote Manager node - for licensing and copyright see license.txt */
+
 #include "StdAfx.h"
 #include "Nodes/G2FlowBaseNode.h"
-#include "CryVR_WiimoteManager.h"
+#include "Wiimote/CryVR_WiimoteManager.h"
 
 
 int CryVR_WiimoteManager::found				= 0;
@@ -186,12 +188,10 @@ void CryVR_WiimoteManager::GetConfiguration(SFlowNodeConfig& config){
 			{0},
 		};
 
-
 		config.pInputPorts = inputs;
 		config.pOutputPorts = outputs;
 		config.sDescription = _HELP("Wiimote Manager");
 		config.SetCategory(EFLN_APPROVED);
-
 }
 
 

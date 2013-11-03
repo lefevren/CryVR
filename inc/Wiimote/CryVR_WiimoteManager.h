@@ -1,10 +1,12 @@
+/* Wiimote Manager header - for licensing and copyright see license.txt */
+
 #pragma once
 
 
 #include "Nodes/G2FlowBaseNode.h"
 #include "Actor.h"
 
-#include "wiiuse.h" 
+#include "wiiuse/wiiuse.h" 
 
 #define MAX_WIIMOTES				1
 
@@ -70,6 +72,4 @@ class CryVR_WiimoteManager : public CFlowBaseNode<eNCT_Instanced>
 		virtual void GetMemoryStatistics(ICrySizer *s){s->Add(*this);}
 		virtual IFlowNodePtr Clone(SActivationInfo *pActInfo){return new CryVR_WiimoteManager(pActInfo);}
 		virtual void GetMemoryUsage(ICrySizer * s) const{s->Add(*this);}
-		
-
 };

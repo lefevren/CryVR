@@ -1,3 +1,5 @@
+/* Asymetric camera node - for licensing and copyright see license.txt */
+
 #include "StdAfx.h"
 #include "Nodes/G2FlowBaseNode.h"
 #include "Actor.h"
@@ -24,21 +26,13 @@ class CFlowNode_AsymmetricCamera : public CFlowBaseNode<eNCT_Instanced>
 public:
 	
 	////////////////////////////////////////////////////
-	CFlowNode_AsymmetricCamera(SActivationInfo *pActInfo)
-	{
-	}
+	CFlowNode_AsymmetricCamera(SActivationInfo *pActInfo){}
 
 	////////////////////////////////////////////////////
-	virtual ~CFlowNode_AsymmetricCamera(void)
-	{
-
-	}
+	virtual ~CFlowNode_AsymmetricCamera(void){}
 
 	////////////////////////////////////////////////////
-	virtual void Serialize(SActivationInfo *pActInfo, TSerialize ser)
-	{
-
-	}
+	virtual void Serialize(SActivationInfo *pActInfo, TSerialize ser){}
 
 	////////////////////////////////////////////////////
 	virtual void GetConfiguration(SFlowNodeConfig& config)
@@ -47,10 +41,10 @@ public:
 		static const SInputPortConfig inputs[] =
 		{
 			InputPortConfig<bool>("IsServer",true, _HELP("Determine if this computer is a server for a CAVE")),
-			InputPortConfig<float>("AsymL",0.0, _HELP("Determine if this computer is a server for a CAVE")),
-			InputPortConfig<float>("AsymR",0.0, _HELP("Determine if this computer is a server for a CAVE")),
-			InputPortConfig<float>("AsymT",0.0, _HELP("Determine if this computer is a server for a CAVE")),
-			InputPortConfig<float>("AsymB",0.0, _HELP("Determine if this computer is a server for a CAVE")),
+			InputPortConfig<float>("AsymL",0.0, _HELP("Left asymetric parameter")),
+			InputPortConfig<float>("AsymR",0.0, _HELP("Right asymetric parameter")),
+			InputPortConfig<float>("AsymT",0.0, _HELP("Top asymetric parameter")),
+			InputPortConfig<float>("AsymB",0.0, _HELP("Bottom asymetric parameter")),
 			InputPortConfig<EntityId> ("Camera",_HELP("Optional entity used to act as the camera for the test. Does not have to be a real camera.")),
 			{0},
 		};
@@ -58,14 +52,14 @@ public:
 		// Define output ports here, in same order as EOutputPorts
 		static const SOutputPortConfig outputs[] =
 		{
-			OutputPortConfig<string>("Message", _HELP("Debug message from multiplayer setup")),
+			OutputPortConfig<string>("Message", _HELP("Output status")),
 			{0},
 		};
 		
 		// Fill in configuration
 		config.pInputPorts = inputs;
 		config.pOutputPorts = outputs;
-		config.sDescription = _HELP("FG node that sets up a CAVE environment");
+		config.sDescription = _HELP("FG node that sets up asymetry paramaters");
 		config.SetCategory(EFLN_APPROVED);
 	}
 
@@ -85,16 +79,7 @@ public:
 
 				pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
 
-				/*
-				IActor * pClientActor = g_pGame->GetIGameFramework()->GetClientActor();
 				
-				if(pClientActor){
-						pClientActor->ToggleThirdPerson();
-						pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
-				}
-
-				//string chaine = gEnv->pConsole->GetCVar("Essai");
-				*/
 			}
 			break;
 		

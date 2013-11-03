@@ -1,5 +1,7 @@
+/* 1Euro filter header - for licensing and copyright see license.txt */
+
 #include "StdAfx.h"
-#include "VR/LowPassFilter.h"
+#include "filters/LowPassFilter.h"
 
 
 //IConsole* pConsole = gEnv->pSystem->GetIConsole();
@@ -28,8 +30,6 @@ public:
 		setDerivateCutoff(1.0) ;
 		
 		init();
-		
-		
 	}
 
 	~OneEuroFilter(){};
@@ -55,11 +55,6 @@ public:
 			setBeta(beta) ;
 			init();
 		}
-		
-
-		//setFrequency(frequence) ;
-		//setMinCutoff(mincutoff) ;
-		//setBeta(beta) ;
 	}
 
 	double filter(double value){

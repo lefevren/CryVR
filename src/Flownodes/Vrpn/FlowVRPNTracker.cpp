@@ -1,9 +1,11 @@
+/* VRPN tracker node - for licensing and copyright see license.txt */
+
 #include "StdAfx.h"
 #include "Nodes/G2FlowBaseNode.h"
 #include "Actor.h"
-#include "vrpn_Tracker.h"
-#include "vrpn_Button.h"
-#include "vrpn_Analog.h"
+#include "vrpn/vrpn_Tracker.h"
+#include "vrpn/vrpn_Button.h"
+#include "vrpn/vrpn_Analog.h"
 
 void VRPN_CALLBACK handle_tracker_generic(void* userData, const vrpn_TRACKERCB t ){*(vrpn_TRACKERCB*)userData=t;}	
 
@@ -12,6 +14,7 @@ class CFlowNode_VRPNTracker : public CFlowBaseNode<eNCT_Instanced>
 {
 	enum EInputPorts
 	{
+		ACTIVE,
 		IP_SERVER,
 		NAME_TRACKER,
 	};
@@ -28,6 +31,7 @@ public:
 	
 	vrpn_Tracker_Remote * vrpnAnalog;
 	vrpn_TRACKERCB * test_analog;
+	bool active;
 
 	/* Methods */
 	CFlowNode_VRPNTracker(SActivationInfo *pActInfo){}
@@ -42,7 +46,7 @@ public:
 	{
 		static const SInputPortConfig inputs[] =
 		{
-			
+			InputPortConfig<bool>("Activate",true, _HELP("Activation")),
 			InputPortConfig<int>( "VRPN_SERVER", _HELP("VRPN_SERVER" ), _HELP("VRPN_SERVER"), _UICONFIG("enum_int:Server0=0,Server1=1,Server2=2,Server3=3,Server4=4,Server5=5,Server6=6,Server7=7,Server8=8,Server9=9")),
 			InputPortConfig<int>( "TRACKER_NAME", _HELP("TRACKER_NAME" ), _HELP("TRACKER_NAME"), _UICONFIG("enum_int:Tracker0=0,Tracker1=1,Tracker2=2,Tracker3=3,Tracker4=4,Tracker5=5,Tracker6=6,Tracker7=7,Tracker8=8,Tracker9=9")),
 			{0},
@@ -51,10 +55,10 @@ public:
 		
 		static const SOutputPortConfig outputs[] =
 		{
-			OutputPortConfig<Vec3>("PositionTracker", _HELP("Debug message from multiplayer setup")),
-			OutputPortConfig<Vec3>("RotationTracker_X_Y_Z", _HELP("Debug message from multiplayer setup")),
-			OutputPortConfig<float>("RotationTracker_W", _HELP("Debug message from multiplayer setup")),
-			OutputPortConfig<Vec3>("DirectionTracker_X_Y_Z", _HELP("Debug message from multiplayer setup")),
+			OutputPortConfig<Vec3>("PositionTracker", _HELP("Tracker position")),
+			OutputPortConfig<Vec3>("RotationTracker_X_Y_Z", _HELP("Tracker Quaternion xyz")),
+			OutputPortConfig<float>("RotationTracker_W", _HELP("Tracker Quaternion w")),
+			OutputPortConfig<Vec3>("DirectionTracker_X_Y_Z", _HELP("Tracker direction")),
 			{0},
 		};
 		
@@ -68,36 +72,36 @@ public:
 
 	virtual void ProcessEvent(EFlowEvent event, SActivationInfo *pActInfo)
 	{
+
 		string serverstring;
 		switch (event)
 		{
 		case eFE_Initialize:
 			{
-				CryLogAlways("CARABO");
-				int input_server = GetPortInt(pActInfo, 0);
-				int input_tracker = GetPortInt(pActInfo, 1);
+				int input_server = GetPortInt(pActInfo, 1);
+				int input_tracker = GetPortInt(pActInfo, 2);
 
-				CryLogAlways("%i",input_server);
 				char * input_server_s = (char*)malloc(256*sizeof(char)) ;
 				sprintf(input_server_s,"CryVR_vrpn_server_%i",input_server);
 				char * input_tracker_s = (char*)malloc(256*sizeof(char)) ;
 				sprintf(input_tracker_s,"CryVR_vrpn_tracker_%i",input_tracker);
 				
-				CryLogAlways(input_server_s);
-
 				string vrpn_server= gEnv->pSystem->GetIConsole()->GetCVar(input_server_s/*+GetPortInt(pActInfo, 0)*/)->GetString();
 				string tracker_name = gEnv->pSystem->GetIConsole()->GetCVar(input_tracker_s/*+GetPortInt(pActInfo, 1)*/)->GetString();
 				
 				serverstring = tracker_name+"@"+vrpn_server;
-				CryLogAlways(serverstring);
+				
 				test_analog = (vrpn_TRACKERCB *) malloc(sizeof(vrpn_TRACKERCB)*2);
 				vrpnAnalog = new vrpn_Tracker_Remote(serverstring);
 				vrpnAnalog->register_change_handler(test_analog,handle_tracker_generic);
+
+				active = false;
+				break;
 			}
 		case eFE_Activate:
 			{
-				if (vrpnAnalog){
-					vrpnAnalog->mainloop();
+				if ( IsPortActive( pActInfo, ACTIVE ) ){
+					active = GetPortBool( pActInfo, ACTIVE);
 					pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
 				}
 			}
@@ -105,6 +109,8 @@ public:
 		
 		case eFE_Update:
 			{	
+				if(!active) return ;
+
 				if (vrpnAnalog){
 					vrpnAnalog->mainloop();
 					Vec3 position;
@@ -135,7 +141,6 @@ public:
 					ActivateOutput(pActInfo, EOP_VDirection,dir);
 				}
 			}
-			break;
 		}
 	}
 };

@@ -1,11 +1,13 @@
+/* VRPN test node - for licensing and copyright see license.txt */
+
 #include "StdAfx.h"
 #include "Nodes/G2FlowBaseNode.h"
 #include "Actor.h"
 
 
-#include "vrpn_Tracker.h"
-#include "vrpn_Button.h"
-#include "vrpn_Analog.h"
+#include "vrpn/vrpn_Tracker.h"
+#include "vrpn/vrpn_Button.h"
+#include "vrpn/vrpn_Analog.h"
 
 //FlowAsymmetricCamera.cpp
 
