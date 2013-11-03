@@ -9,12 +9,13 @@ int CryVR_WiimoteManager::found				= 0;
 int CryVR_WiimoteManager::connected			= 0;
 bool CryVR_WiimoteManager::init				= false;
 wiimote** CryVR_WiimoteManager::wiimotes	= 0;
-
+int CryVR_WiimoteManager::timeout			= 15;
+int CryVR_WiimoteManager::threshold			= 15;
+float CryVR_WiimoteManager::angle_threshold	= 1;
 
 
 void CryVR_WiimoteManager::Init(){
 	wiimotes = wiiuse_init(MAX_WIIMOTES); 
-
 	wiiuse_set_bluetooth_stack(wiimotes, MAX_WIIMOTES, WIIUSE_STACK_MS);
 
 	found = wiiuse_find(wiimotes,  MAX_WIIMOTES, 5);
@@ -25,28 +26,42 @@ void CryVR_WiimoteManager::Init(){
 	init = true;
 }
 
-void CryVR_WiimoteManager::Init(bool ir_pos, bool motion){
+void CryVR_WiimoteManager::Init(bool ir_pos, bool motion, int v_time, float v_angle, int v_threshold){
 	Init();
 	SetIrPosition(ir_pos);
 	SetMotionSensing(motion);
-	SetAccelThreshold(15);								//10	:	events : <10
-														//1		:	events : >80
-														//5		:	events : ~40 max
-														//7		:	events : <10
-														//3		:	events : ~60
+	SetAccelThreshold(v_threshold, v_angle);								//10	:	events : <10
+																			//1		:	events : >80
+																			//5		:	events : ~40 max
+																			//7		:	events : <10
+																			//3		:	events : ~60
 
-	wiiuse_set_timeout(wiimotes, found, 10, 10);		//20,20	:	events : <10 , 0 si un bouton appuyé
-														//15,15 :	events : ~3
+	SetTimeout(timeout);													//20,20	:	events : <10 , 0 si un bouton appuyé
+																			//15,15 :	events : ~3
 }
 
-bool CryVR_WiimoteManager::SetAccelThreshold(int ii){
+
+bool CryVR_WiimoteManager::SetTimeout(int val){
+	if(init && found>0) {
+		timeout = val;
+		wiiuse_set_timeout(wiimotes, found, timeout, timeout);
+		return true;
+	}
+	return false;
+}
+
+bool CryVR_WiimoteManager::SetAccelThreshold(int ii, float angle){
+
+	threshold = ii;
+	angle_threshold	= angle;
+	
 	if(init && found>0) {
 		int i = 0;
 		for (; i < MAX_WIIMOTES; ++i){
 			wiiuse_set_accel_threshold(wiimotes[i],ii);
 			wiiuse_set_nunchuk_accel_threshold(wiimotes[i],ii);
-			wiiuse_set_orient_threshold(wiimotes[i],5);
-			wiiuse_set_nunchuk_orient_threshold(wiimotes[i],5);
+			wiiuse_set_orient_threshold(wiimotes[i],angle_threshold);
+			wiiuse_set_nunchuk_orient_threshold(wiimotes[i],angle_threshold);
 		}
 		
 		return true;
@@ -166,8 +181,11 @@ void CryVR_WiimoteManager::GetConfiguration(SFlowNodeConfig& config){
 	static const SInputPortConfig inputs[] =
 		{
 			InputPortConfig<bool>("Activate", _HELP("Initialisation")),
-			InputPortConfig<bool>("Ir_Above", _HELP("IR position (Above or below)")),
-			InputPortConfig<bool>("Motion_Sensing", _HELP("Motion sensing state")),
+			InputPortConfig<bool>("Ir_Above",true, _HELP("IR position (Above or below)")),
+			InputPortConfig<bool>("Motion_Sensing",true, _HELP("Motion sensing state")),
+			InputPortConfig<int>("Threshold", 1 ,_HELP("Motion sensing state")),
+			InputPortConfig<float>("Angle", 0.5 ,_HELP("Motion sensing state")),
+			InputPortConfig<int>("Timeout", 0.5 ,_HELP("Motion sensing state")),
 			{0},
 		};
 
@@ -187,7 +205,7 @@ void CryVR_WiimoteManager::GetConfiguration(SFlowNodeConfig& config){
 void CryVR_WiimoteManager::ProcessEvent(EFlowEvent event, SActivationInfo *pActInfo){
 	
 	if(event==eFE_Activate  && IsPortActive(pActInfo,0)) {
-			Init(GetPortBool(pActInfo, 1),GetPortBool(pActInfo, 2));
+			Init(GetPortBool(pActInfo, 1),GetPortBool(pActInfo, 2),GetPortInt(pActInfo, 3),GetPortFloat(pActInfo, 4),GetPortInt(pActInfo, 5));
 			ActivateOutput(pActInfo, 0, true);
 	}
 	

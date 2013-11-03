@@ -144,7 +144,7 @@ public:
 				wiimote* wm =  wiimotes[0];
 				//Ne change rien ! juste qu'on a un retour d'IR
 				//handle_ctrl_status(wiimotes[0]);
-				CryLogAlways("attachment:      %i",wm->exp.type);
+				CryLogAlways("OBSOLETE USE WIIMOTE CONTROLER TEST :      %i",wm->exp.type);
 
 				
 				

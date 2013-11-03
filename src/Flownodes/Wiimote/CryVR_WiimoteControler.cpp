@@ -130,7 +130,6 @@ public:
 			
 			//while (wiiuse_poll(manettes, CryVR_WiimoteManager::found) && i<3) {	
 			while (wiiuse_poll(manettes, CryVR_WiimoteManager::found) && i<GetPortInt(pActInfo, 2)) {	
-				
 				if(CryVR_WiimoteManager::wiimotes[w_id]->event == WIIUSE_EVENT) {
 					i++;
 					handle_event(CryVR_WiimoteManager::wiimotes[w_id]);

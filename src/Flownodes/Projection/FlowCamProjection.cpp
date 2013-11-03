@@ -8,12 +8,9 @@
 class CFlowCamProjection : public CFlowBaseNode<eNCT_Instanced>
 {
 
-	float fov;// = 60.0;
-	float ratio;// = 1.777777;
-	float ndist;// = 0.25;
-
 	enum EInputPorts
 	{
+		ACTIVE,
 		VEC_POS,
 	};
 
@@ -26,6 +23,7 @@ class CFlowCamProjection : public CFlowBaseNode<eNCT_Instanced>
 
 public:
 	
+	bool active;
 	CFlowCamProjection(SActivationInfo *pActInfo){}
 	virtual ~CFlowCamProjection(void){}
 	virtual void Serialize(SActivationInfo *pActInfo, TSerialize ser){}
@@ -36,6 +34,7 @@ public:
 		// Define input ports here, in same order as EInputPorts
 		static const SInputPortConfig inputs[] =
 		{
+			InputPortConfig<bool>("Activate", _HELP("Activate")),
 			InputPortConfig<Vec3> ("WorldPosition",Vec3(0,0,0), _HELP("World Position to project")),
 			{0},
 		};
@@ -52,7 +51,7 @@ public:
 		// Fill in configuration
 		config.pInputPorts = inputs;
 		config.pOutputPorts = outputs;
-		config.sDescription = _HELP("WorldPos to ScreenPos");
+		config.sDescription = _HELP("Cry VR node to convert WorldPos to ScreenPos");
 		config.SetCategory(EFLN_APPROVED);
 	}
 
@@ -62,35 +61,32 @@ public:
 	////////////////////////////////////////////////////
 	virtual void ProcessEvent(EFlowEvent event, SActivationInfo *pActInfo)
 	{
-		
 		switch (event)
 		{
-		case eFE_Initialize:
-			{
-				pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
-			}
 		case eFE_Activate:
 			{
-				pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
+				if ( IsPortActive( pActInfo, ACTIVE ) ){
+					active = GetPortBool( pActInfo, ACTIVE);
+					pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
+				}
+			
 			}
 			break;
 		
 		case eFE_Update:
 			{	
+
+					if (!active) return;
 				
-					//IActor * pActor = g_pGame->GetIGameFramework()->GetClientActor(); // CONSTANTE
-					//if(pActor){
-					CCamera cam = gEnv->pSystem->GetViewCamera(); // CONSTANTE
+					CCamera cam = gEnv->pSystem->GetViewCamera();
 					Vec3 resultat = Vec3(0,0,0);
 					bool isVisible = cam.Project(GetPortVec3(pActInfo,0),resultat);
-					
 					float distance = GetPortVec3(pActInfo,0).GetDistance(cam.GetPosition());
 					
 					ActivateOutput(pActInfo, VEC_PROJ_POS,resultat);
 					ActivateOutput(pActInfo, FLOAT_DISTANCE,distance);
 					ActivateOutput(pActInfo, IS_VISIBLE,isVisible);
-					//}
-					//else {CryLogAlways("Erreur, pas d'acteur");}
+					
 			}
 		}
 	}
@@ -100,4 +96,4 @@ public:
 	virtual void GetMemoryUsage(ICrySizer * s) const{s->Add(*this);}
 
 };
-REGISTER_FLOW_NODE("CryVR:Flash:CameraProjection", CFlowCamProjection);
+REGISTER_FLOW_NODE("CryVR:Camera:CameraProjection", CFlowCamProjection);

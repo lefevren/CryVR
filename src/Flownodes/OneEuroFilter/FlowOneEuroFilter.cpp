@@ -41,7 +41,7 @@ public:
 			//InputPortConfig<float> ("MinCutOff",1.0, _HELP("Min cut Off")),
 			//InputPortConfig<float> ("beta",1.0, _HELP("?")),
 			//InputPortConfig<float> ("DCutOff",1.0, _HELP("Derivate Cut Off ?")),
-			InputPortConfig<bool> ("Activate",true, _HELP("Activation")),
+			InputPortConfig<bool> ("Active",true, _HELP("Activation")),
 			
 			InputPortConfig<float> ("Valeur",1.0, _HELP("Valeur a filtrer")),
 			{0},

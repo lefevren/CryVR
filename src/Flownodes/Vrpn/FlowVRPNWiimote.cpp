@@ -188,4 +188,4 @@ public:
 };
 
 
-REGISTER_FLOW_NODE("CryVR:Controlers:VRPNWiiMote", CFlowNode_VRPNWiimote);
+REGISTER_FLOW_NODE("CryVR:VRPN:VRPNWiiMote", CFlowNode_VRPNWiimote);

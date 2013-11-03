@@ -14,8 +14,7 @@ public:
 
 	SActivationInfo m_actInfo;
 	int CryVR_WiimoteID;
-	//imote** wiimotes;
-
+	
 	enum EInputPorts
 	{
 		EIP_IsServer = 0,
@@ -52,7 +51,7 @@ public:
 		// Define input ports here, in same order as EInputPorts
 		static const SInputPortConfig inputs[] =
 		{
-			InputPortConfig<bool>("Activate", _HELP("Connexion à un server VRPN")),
+			InputPortConfig<bool>("Activate (NOT WORKING)", _HELP("Connexion à un server VRPN")),
 			InputPortConfig<int>("WiimoteID", _HELP("Connexion à un server VRPN")),
 			{ 0 },
 		};
@@ -80,6 +79,9 @@ public:
 	////////////////////////////////////////////////////
 	virtual void ProcessEvent(EFlowEvent event, SActivationInfo *pActInfo)
 	{
+
+		CryLogAlways("NOT WORKING");
+
 		switch (event)
 		{
 		case eFE_Initialize: 
@@ -91,25 +93,20 @@ public:
 			{	
 				CryVR_WiimoteManager::SetLeds(0,GetPortInt(pActInfo, 1));
 				pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
-				
 			}
 		
 		case eFE_Update:
 			{
 				int w_id = GetPortInt(pActInfo, 1);
-				//CryLogAlways("expansion : %i",CryVR_WiimoteManager::wiimotes[w_id]->exp.type);
 				if(CryVR_WiimoteManager::wiimotes[w_id]->exp.type == 0){
 					CryVR_WiimoteManager::Init();
 				}
-				
-				
-				
+
 				if(CryVR_WiimoteManager::found >w_id && w_id>=0 && CryVR_WiimoteManager::wiimotes[w_id]->exp.type == EXP_WII_BOARD) {
 					while (wiiuse_poll(CryVR_WiimoteManager::wiimotes, MAX_WIIMOTES)) {
 						if(CryVR_WiimoteManager::wiimotes[w_id]->event == WIIUSE_EVENT) handle_event(CryVR_WiimoteManager::wiimotes[w_id]);
 					}
 				}
-					
 			}
 		}
 	}
@@ -139,12 +136,6 @@ void handle_event(struct wiimote_t* wm) {
 	}
 }
 
-/*
-void handle_read(struct wiimote_t* wm, byte* data, unsigned short len) {}
-void handle_ctrl_status(struct wiimote_t* wm) {}
-void handle_disconnect(wiimote* wm) {}
-void test(struct wiimote_t* wm, byte* data, unsigned short len) {}
-*/
 };
 
 REGISTER_FLOW_NODE("CryVR:Controlers:Wii:WiimoteBalanceBoard",  CryVR_WiimoteBalanceBoard);

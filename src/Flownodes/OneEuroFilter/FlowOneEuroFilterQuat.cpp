@@ -44,6 +44,7 @@ public:
 		// Define input ports here, in same order as EInputPorts
 		static const SInputPortConfig inputs[] =
 		{
+			InputPortConfig<bool> ("Active", _HELP("Activation")),
 			InputPortConfig<Vec3> ("Valeur_x_y_z",Vec3(0,0,0), _HELP("Valeur a filtrer")),
 			InputPortConfig<float> ("Valeur_w",0, _HELP("Valeur a filtrer")),
 			{0},
