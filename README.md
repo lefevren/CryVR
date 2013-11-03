@@ -25,10 +25,10 @@ Version 0.1
 Initial version. (Unstable !)
 
 
-- VRPN tracker and wiimote (2x nodes) => workking but need some refactoring
-- Asymetric camera setup (3x nodes) => workking but need some refactoring
-- Wiimote controler (8x nodes) => workking but need some refactoring
-- 3D to 2D coordinates (1x node) => workking but need some refactoring
+- VRPN tracker and wiimote (2x nodes) => working but need some refactoring
+- Asymetric camera setup (3x nodes) => working but need some refactoring
+- Wiimote controler (8x nodes) => working but need some refactoring
+- 3D to 2D coordinates (1x node) => working but need some refactoring
 - One euro filter integration (filtering noise for float, vec2, vec3 and quaternion) (4x nodes) => Unstable due to large use of custom console vars.
 
 
