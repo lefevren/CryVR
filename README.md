@@ -1,6 +1,8 @@
 CryVR
 =====
 
+*** NOTE : Unstable initial version ***
+
 CryVR push CryEngine to virtual reality !
 
 CryVR gives CryEngine (since 3.5.4 both x86 & x64) virtual reality possibilities such as :
@@ -20,12 +22,20 @@ CryVR gives CryEngine (since 3.5.4 both x86 & x64) virtual reality possibilities
 Version 0.1
 ======================
 
-Initial version.
+Initial version. (Unstable !)
 
-- Wiiuse integration (x86 and x64 lib and dll in vs2012 version)
-- VRPN integration (x86 and x64 lib and dll in vs2012 version)
+
+- VRPN tracker and wiimote (2x nodes)
+- Asymetric camera setup (3x nodes)
+- Wiimote controler (8x nodes)
 - 3D to 2D coordinates (1x node)
-- One euro filter integration (filtering noise for float, vec2, vec3 and quaternion) (4x nodes)
+- One euro filter integration (filtering noise for float, vec2, vec3 and quaternion) (4x nodes) => Unstable due to large use of custom console vars.
+
+
+Included library
+================
+- Wiiuse integration (x86 and x64 lib and dll in vs2012 version)
+- VRPN library integration (x86 and x64 lib and dll in vs2012 version)
 
 
 Infos
@@ -37,7 +47,11 @@ Infos
 More
 ====
 
-One euro filter : Algorithm based on the C++ version of [One euro filter] (http://www.lifl.fr/~casiez/1euro/). This filter help to smooth raw data from VRPN server.
+- One euro filter : Algorithm based on the C++ version of [One euro filter] (http://www.lifl.fr/~casiez/1euro/). This filter help to smooth raw data from VRPN server or Wiimote controler. 4x nodes to smooth float, vec2, vec3 and quaternion values.
+- Wiimote nodes :  Wiimote Manager node, Wiimote controler node, Battery Level node, IR and Motion Sensing nodes, Rumble node. Wiimote nodes drop down fps from about ~20%.
+- VRPN : Need a VRPN server to connect. If the server bring wiimote controler, then VRPNWiimote can be used. 
+
+
 
 
 
