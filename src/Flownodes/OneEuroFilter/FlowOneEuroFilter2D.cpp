@@ -88,8 +88,8 @@ public:
 				oef_y->increaseTimeStamp(1.0/oef_y->getFrequence());
 				
 				Vec3 valeur =  GetPortVec3(pActInfo, IN_Value);
-				float filtered_x = oef_x->filter(valeur.x) ;
-				float filtered_y = oef_y->filter(valeur.y) ;
+				float filtered_x = (float)oef_x->filter(valeur.x) ;
+				float filtered_y = (float)oef_y->filter(valeur.y) ;
 				
 				Vec3 filtered = Vec3(filtered_x,filtered_y,0);
 				ActivateOutput(pActInfo, OUT_Value,filtered);
@@ -118,4 +118,4 @@ public:
 
 };
 
-REGISTER_FLOW_NODE("Cireve:Filters:OneEuroFilterVec2D", CFlowOneEuroFilter2D);
+REGISTER_FLOW_NODE("CryVR:Filters:OneEuroFilterVec2D", CFlowOneEuroFilter2D);

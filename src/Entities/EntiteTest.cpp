@@ -89,6 +89,7 @@ CEntiteTest::~CEntiteTest(){}
 
 		Vec3 pos = GetEntity()->GetWorldPos();
 		gEnv->pLog->Log("EntiteTest INIT POS: %f %f %f", pos.x, pos.y, pos.z);
+		
 		/*
 		m_points[0] = pos;
 		m_points[1] = pos + Vec3(0,0,m_cloudHeight/8.0f);

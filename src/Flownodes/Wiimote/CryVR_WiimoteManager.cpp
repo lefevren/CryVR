@@ -157,20 +157,9 @@ bool CryVR_WiimoteManager::SetLeds(int id,int led){
 	else return false;
 }
 
-CryVR_WiimoteManager::CryVR_WiimoteManager(SActivationInfo *pActInfo)
-{
-	CryLogAlways("Constructeur");
-}
-
-
-CryVR_WiimoteManager::~CryVR_WiimoteManager(void){
-	CryLogAlways("Destructeur");
-}
-
-
-void CryVR_WiimoteManager::Serialize(SActivationInfo *pActInfo, TSerialize ser){
-	CryLogAlways("Serialize");
-}
+CryVR_WiimoteManager::CryVR_WiimoteManager(SActivationInfo *pActInfo){}
+CryVR_WiimoteManager::~CryVR_WiimoteManager(void){}
+void CryVR_WiimoteManager::Serialize(SActivationInfo *pActInfo, TSerialize ser){}
 
 
 void CryVR_WiimoteManager::GetConfiguration(SFlowNodeConfig& config){
@@ -202,30 +191,8 @@ void CryVR_WiimoteManager::ProcessEvent(EFlowEvent event, SActivationInfo *pActI
 			ActivateOutput(pActInfo, 0, true);
 	}
 	
-	/*
-	switch (event)
-		{
-		case eFE_Initialize:
-			//CryLogAlways("Init");
-			m_actInfo = *pActInfo;
-			break;
-		case eFE_Activate:
-			{	
-				pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
-			}
-			
-		case eFE_Update:
-			{
-				if(GetPortBool(pActInfo, 0)){
-					Init(GetPortBool(pActInfo, 1),GetPortBool(pActInfo, 2));
-					ActivateOutput(pActInfo, 0, true);
-					CryLogAlways("Reset");
-				}	
-			}
-			
-		}
-		*/
+	
 }
 
 
-REGISTER_FLOW_NODE("CryVR:Controlers:WiimoteManager", CryVR_WiimoteManager);
+REGISTER_FLOW_NODE("CryVR:Controlers:Wii:WiimoteManager", CryVR_WiimoteManager);

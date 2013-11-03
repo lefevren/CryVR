@@ -63,6 +63,8 @@ public:
 			bool retour = CryVR_WiimoteManager::ToggleRumble(GetPortInt(pActInfo, 1));
 			ActivateOutput(pActInfo, 0, retour);
 		}
+
+		
 	}
 
 	virtual void GetMemoryStatistics(ICrySizer *s){s->Add(*this);}
@@ -73,5 +75,5 @@ public:
 
 
 	
-REGISTER_FLOW_NODE("CryVR:Controlers:WiimoteRumble",  CryVR_WiimoteRumble);
+REGISTER_FLOW_NODE("CryVR:Controlers:Wii:WiimoteRumble",  CryVR_WiimoteRumble);
 

@@ -4,9 +4,9 @@
 #include "Nodes/G2FlowBaseNode.h"
 #include "Actor.h"
 
-#include "Wiiuse/wiiuse.h" 
-#include "Wiimote/CryVR_WiimoteManager.h"
 
+#include "Wiimote/CryVR_WiimoteManager.h"
+#include "wiiuse/wiiuse.h"
 
 class CryVR_WiimoteBalanceBoard : public CFlowBaseNode<eNCT_Instanced>
 {
@@ -61,12 +61,9 @@ public:
 		static const SOutputPortConfig outputs[] =
 		{
 			OutputPortConfig<string>("Status", _HELP("")),
-			
 			OutputPortConfig<bool>("A", _HELP("")),
-			
 			OutputPortConfig<Vec3>("Balance_board_left", _HELP("Balance board left values")),
 			OutputPortConfig<Vec3>("Balance_board_right", _HELP("Balance board right values")),
-			
 			{0},
 		};
 		
@@ -104,6 +101,9 @@ public:
 				if(CryVR_WiimoteManager::wiimotes[w_id]->exp.type == 0){
 					CryVR_WiimoteManager::Init();
 				}
+				
+				
+				
 				if(CryVR_WiimoteManager::found >w_id && w_id>=0 && CryVR_WiimoteManager::wiimotes[w_id]->exp.type == EXP_WII_BOARD) {
 					while (wiiuse_poll(CryVR_WiimoteManager::wiimotes, MAX_WIIMOTES)) {
 						if(CryVR_WiimoteManager::wiimotes[w_id]->event == WIIUSE_EVENT) handle_event(CryVR_WiimoteManager::wiimotes[w_id]);
@@ -132,6 +132,7 @@ public:
 void handle_event(struct wiimote_t* wm) {
 	if (IS_PRESSED(wm, WIIMOTE_BUTTON_A)) ActivateOutput(&m_actInfo, WIIMOTE_A, true);// else ActivateOutput(&m_actInfo, WIIMOTE_A, false);
 	if (wm->exp.type == EXP_WII_BOARD){
+		
 		struct wii_board_t* wb = (wii_board_t*)&wm->exp.wb;
 		ActivateOutput(&m_actInfo, BALANCE_BOARD_LEFT, Vec3(wb->tl,wb->bl,0));
 		ActivateOutput(&m_actInfo, BALANCE_BOARD_RIGHT, Vec3(wb->tr,wb->br,0));
@@ -146,5 +147,5 @@ void test(struct wiimote_t* wm, byte* data, unsigned short len) {}
 */
 };
 
-REGISTER_FLOW_NODE("CryVR:Controlers:WiimoteBalanceBoard",  CryVR_WiimoteBalanceBoard);
+REGISTER_FLOW_NODE("CryVR:Controlers:Wii:WiimoteBalanceBoard",  CryVR_WiimoteBalanceBoard);
 

@@ -70,5 +70,5 @@ public:
 
 };
 
-REGISTER_FLOW_NODE("CryVR:Controlers:WiimoteMotionSensing",  CryVR_WiimoteMotionSensing);
+REGISTER_FLOW_NODE("CryVR:Controlers:Wii:WiimoteMotionSensing",  CryVR_WiimoteMotionSensing);
 

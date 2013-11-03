@@ -78,5 +78,5 @@ public:
 
 
 	
-REGISTER_FLOW_NODE("CryVR:Controlers:WiimoteIR",  CryVR_WiimoteIR);
+REGISTER_FLOW_NODE("CryVR:Controlers:Wii:WiimoteIR",  CryVR_WiimoteIR);
 

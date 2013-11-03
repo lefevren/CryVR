@@ -39,6 +39,10 @@
 #ifndef WIIUSE_H_INCLUDED
 #define WIIUSE_H_INCLUDED
 
+#define WIIUSE_MAJOR 0
+#define WIIUSE_MINOR 13
+#define WIIUSE_MICRO 1
+
 #ifdef _WIN32
 	/* windows */
 	#include <windows.h>
@@ -52,6 +56,8 @@
 #else
 	#define WCONST		const
 #endif
+
+#include <stdint.h>
 
 /* led bit masks */
 #define WIIMOTE_LED_NONE				0x00
@@ -128,6 +134,7 @@
 #define EXP_NUNCHUK						1
 #define EXP_CLASSIC						2
 #define EXP_GUITAR_HERO_3				3
+#define EXP_WII_BOARD					4
 
 /* IR correction types */
 typedef enum ir_position_t {
@@ -230,7 +237,7 @@ struct gforce_t;
  *      library when the wiimote has returned the full data requested by a previous
  *      call to wiiuse_read_data().
  */
-typedef void (*wiiuse_read_cb)(struct wiimote_t* wm, byte* data, unsigned short len);
+typedef void (*wiiuse_read_cb)(struct wiimote_t* wm, byte* data, uint16_t len);
 
 
 /**
@@ -240,9 +247,9 @@ typedef void (*wiiuse_read_cb)(struct wiimote_t* wm, byte* data, unsigned short 
 struct read_req_t {
 	wiiuse_read_cb cb;			/**< read data callback											*/
 	byte* buf;					/**< buffer where read data is written							*/
-	unsigned int addr;			/**< the offset that the read started at						*/
-	unsigned short size;		/**< the length of the data read								*/
-	unsigned short wait;		/**< num bytes still needed to finish read						*/
+	uint32_t addr;			/**< the offset that the read started at						*/
+	uint16_t size;		/**< the length of the data read								*/
+	uint16_t wait;		/**< num bytes still needed to finish read						*/
 	byte dirty;					/**< set to 1 if not using callback and needs to be cleaned up	*/
 
 	struct read_req_t* next;	/**< next read request in the queue								*/
@@ -325,8 +332,8 @@ typedef struct ir_dot_t {
 	unsigned int x;					/**< interpolated X coordinate			*/
 	unsigned int y;					/**< interpolated Y coordinate			*/
 
-	short rx;						/**< raw X coordinate (0-1023)			*/
-	short ry;						/**< raw Y coordinate (0-767)			*/
+	int16_t rx;						/**< raw X coordinate (0-1023)			*/
+	int16_t ry;						/**< raw Y coordinate (0-767)			*/
 
 	byte order;						/**< increasing order by x-axis value	*/
 
@@ -424,9 +431,9 @@ typedef struct nunchuk_t {
  *	@brief Classic controller expansion device.
  */
 typedef struct classic_ctrl_t {
-	short btns;						/**< what buttons have just been pressed	*/
-	short btns_held;				/**< what buttons are being held down		*/
-	short btns_released;			/**< what buttons were just released this	*/
+	int16_t btns;						/**< what buttons have just been pressed	*/
+	int16_t btns_held;				/**< what buttons are being held down		*/
+	int16_t btns_released;			/**< what buttons were just released this	*/
 
 	float r_shoulder;				/**< right shoulder button (range 0-1)		*/
 	float l_shoulder;				/**< left shoulder button (range 0-1)		*/
@@ -441,14 +448,33 @@ typedef struct classic_ctrl_t {
  *	@brief Guitar Hero 3 expansion device.
  */
 typedef struct guitar_hero_3_t {
-	short btns;						/**< what buttons have just been pressed	*/
-	short btns_held;				/**< what buttons are being held down		*/
-	short btns_released;			/**< what buttons were just released this	*/
+	int16_t btns;						/**< what buttons have just been pressed	*/
+	int16_t btns_held;				/**< what buttons are being held down		*/
+	int16_t btns_released;			/**< what buttons were just released this	*/
 
 	float whammy_bar;				/**< whammy bar (range 0-1)					*/
 
 	struct joystick_t js;			/**< joystick calibration					*/
 } guitar_hero_3_t;
+
+/*
+	Wii board
+*/
+typedef struct wii_board_t {
+	float  tl;  /* Interpolated */
+	float  tr;
+	float  bl;
+	float  br;  /* End interp */
+	uint16_t  rtl; /* RAW */
+	uint16_t  rtr;
+	uint16_t  rbl;
+	uint16_t  rbr; /* /RAW */
+	uint16_t  ctl[3]; /* Calibration */
+	uint16_t  ctr[3];
+	uint16_t  cbl[3];
+	uint16_t  cbr[3]; /* /Calibration */
+	uint8_t update_calib;
+} wii_board_t;
 
 
 /**
@@ -462,6 +488,7 @@ typedef struct expansion_t {
 		struct nunchuk_t nunchuk;
 		struct classic_ctrl_t classic;
 		struct guitar_hero_3_t gh3;
+		struct wii_board_t wb;
 	};
 } expansion_t;
 
@@ -487,11 +514,17 @@ typedef struct wiimote_state_t {
 	float exp_rjs_ang;
 	float exp_ljs_mag;
 	float exp_rjs_mag;
-	unsigned short exp_btns;
+	uint16_t exp_btns;
 	struct orient_t exp_orient;
 	struct vec3b_t exp_accel;
 	float exp_r_shoulder;
 	float exp_l_shoulder;
+
+	/* wiiboard */
+	uint16_t exp_wb_rtr;
+	uint16_t exp_wb_rtl;
+	uint16_t exp_wb_rbr;
+	uint16_t exp_wb_rbl;
 
 	/* ir_t */
 	int ir_ax;
@@ -499,7 +532,7 @@ typedef struct wiimote_state_t {
 	float ir_distance;
 
 	struct orient_t orient;
-	unsigned short btns;
+	uint16_t btns;
 
 	struct vec3b_t accel;
 } wiimote_state_t;
@@ -522,7 +555,9 @@ typedef enum WIIUSE_EVENT_TYPE {
 	WIIUSE_CLASSIC_CTRL_INSERTED,
 	WIIUSE_CLASSIC_CTRL_REMOVED,
 	WIIUSE_GUITAR_HERO_3_CTRL_INSERTED,
-	WIIUSE_GUITAR_HERO_3_CTRL_REMOVED
+	WIIUSE_GUITAR_HERO_3_CTRL_REMOVED,
+	WIIUSE_WII_BOARD_CTRL_INSERTED,
+	WIIUSE_WII_BOARD_CTRL_REMOVED
 } WIIUSE_EVENT_TYPE;
 
 /**
@@ -564,12 +599,12 @@ typedef struct wiimote_t {
 
 	WCONST struct ir_t ir;					/**< IR data								*/
 
-	WCONST unsigned short btns;				/**< what buttons have just been pressed	*/
-	WCONST unsigned short btns_held;		/**< what buttons are being held down		*/
-	WCONST unsigned short btns_released;	/**< what buttons were just released this	*/
+	WCONST uint16_t btns;				/**< what buttons have just been pressed	*/
+	WCONST uint16_t btns_held;		/**< what buttons are being held down		*/
+	WCONST uint16_t btns_released;	/**< what buttons were just released this	*/
 
 	WCONST float orient_threshold;			/**< threshold for orient to generate an event */
-	WCONST int accel_threshold;				/**< threshold for accel to generate an event */
+	WCONST int32_t accel_threshold;				/**< threshold for accel to generate an event */
 
 	WCONST struct wiimote_state_t lstate;	/**< last saved state						*/
 
@@ -605,14 +640,16 @@ extern "C" {
 /* wiiuse.c */
 WIIUSE_EXPORT extern const char* wiiuse_version();
 
+WIIUSE_EXPORT extern int wiiuse_available();
 WIIUSE_EXPORT extern struct wiimote_t** wiiuse_init(int wiimotes);
+WIIUSE_EXPORT extern struct wiimote_t** wiiuse_init_id_base(int wiimotes, int id_base);
 WIIUSE_EXPORT extern void wiiuse_disconnected(struct wiimote_t* wm);
 WIIUSE_EXPORT extern void wiiuse_cleanup(struct wiimote_t** wm, int wiimotes);
 WIIUSE_EXPORT extern void wiiuse_rumble(struct wiimote_t* wm, int status);
 WIIUSE_EXPORT extern void wiiuse_toggle_rumble(struct wiimote_t* wm);
 WIIUSE_EXPORT extern void wiiuse_set_leds(struct wiimote_t* wm, int leds);
 WIIUSE_EXPORT extern void wiiuse_motion_sensing(struct wiimote_t* wm, int status);
-WIIUSE_EXPORT extern int wiiuse_read_data(struct wiimote_t* wm, byte* buffer, unsigned int offset, unsigned short len);
+WIIUSE_EXPORT extern int wiiuse_read_data(struct wiimote_t* wm, byte* buffer, unsigned int offset, uint16_t len);
 WIIUSE_EXPORT extern int wiiuse_write_data(struct wiimote_t* wm, unsigned int addr, byte* data, byte len);
 WIIUSE_EXPORT extern void wiiuse_status(struct wiimote_t* wm);
 WIIUSE_EXPORT extern struct wiimote_t* wiiuse_get_by_id(struct wiimote_t** wm, int wiimotes, int unid);
@@ -623,6 +660,7 @@ WIIUSE_EXPORT extern void wiiuse_set_orient_threshold(struct wiimote_t* wm, floa
 WIIUSE_EXPORT extern void wiiuse_resync(struct wiimote_t* wm);
 WIIUSE_EXPORT extern void wiiuse_set_timeout(struct wiimote_t** wm, int wiimotes, byte normal_timeout, byte exp_timeout);
 WIIUSE_EXPORT extern void wiiuse_set_accel_threshold(struct wiimote_t* wm, int threshold);
+WIIUSE_EXPORT extern int wiiuse_move_connected(struct wiimote_t **to, int to_size, struct wiimote_t **from, int from_size);
 
 /* connect.c */
 WIIUSE_EXPORT extern int wiiuse_find(struct wiimote_t** wm, int max_wiimotes, int timeout);
@@ -643,6 +681,9 @@ WIIUSE_EXPORT extern void wiiuse_set_ir_sensitivity(struct wiimote_t* wm, int le
 WIIUSE_EXPORT extern void wiiuse_set_nunchuk_orient_threshold(struct wiimote_t* wm, float threshold);
 WIIUSE_EXPORT extern void wiiuse_set_nunchuk_accel_threshold(struct wiimote_t* wm, int threshold);
 
+/* wiiboard.c */
+/* this function not currently implemented... */
+WIIUSE_EXPORT extern void wiiuse_set_wii_board_calib(struct wiimote_t *wm);
 
 #ifdef __cplusplus
 }

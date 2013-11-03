@@ -103,10 +103,10 @@ public:
 				oef_z->increaseTimeStamp(1.0/oef_z->getFrequence());
 
 				Vec3 valeur =  GetPortVec3(pActInfo, IN_Value);
-				float filtered_x = oef_x->filter(valeur.x) ;
-				float filtered_y = oef_y->filter(valeur.y) ;
-				float filtered_z = oef_z->filter(valeur.z) ;
-				float filtered_w = oef_w->filter(GetPortFloat(pActInfo, IN_Value_w)) ;
+				float filtered_x = (float)oef_x->filter(valeur.x) ;
+				float filtered_y = (float)oef_y->filter(valeur.y) ;
+				float filtered_z = (float)oef_z->filter(valeur.z) ;
+				float filtered_w = (float)oef_w->filter(GetPortFloat(pActInfo, IN_Value_w)) ;
 
 				Quat quat = Quat(filtered_w,filtered_x,filtered_y,filtered_z);
 				quat.Normalize();
@@ -140,4 +140,4 @@ public:
 };
 
 
-REGISTER_FLOW_NODE("Cireve:Filters:OneEuroFilterQuaternion", CFlowOneEuroFilterQuat);
+REGISTER_FLOW_NODE("CryVR:Filters:OneEuroFilterQuaternion", CFlowOneEuroFilterQuat);

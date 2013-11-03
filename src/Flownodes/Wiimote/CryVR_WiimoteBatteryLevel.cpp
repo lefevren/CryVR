@@ -71,5 +71,5 @@ public:
 
 
 	
-REGISTER_FLOW_NODE("CryVR:Controlers:WiimoteBatteryLevel",  CryVR_WiimoteBatteryLevel);
+REGISTER_FLOW_NODE("CryVR:Controlers:Wii:WiimoteBatteryLevel",  CryVR_WiimoteBatteryLevel);
 
