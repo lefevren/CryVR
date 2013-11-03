@@ -1,9 +1,9 @@
-CryVR 0.1 (03.11.2013)
----------------------------
+CryVR
+=======================
 
 
 Version 0.2 (To come)
-=====================
+-----------------
 
 - Camera nodes refactoring
 - Balance Board integration
@@ -11,7 +11,7 @@ Version 0.2 (To come)
 
 
 Version 0.1 (Current release)
-======================
+----------------------
 
 Initial Release for CryEngine 3.5.4 (32/64 bit).
 
