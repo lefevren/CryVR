@@ -9,7 +9,7 @@ Version 0.2 (To come)
 - Balance Board integration.
 - Wiimote node less CPU dependant.
 - Wiimote as a Plugin for CryEngine 3.5.4
-- VRPN as a plugin for CryEngine 3.5.4
+- VRPN as a Plugin for CryEngine 3.5.4
 
 
 Version 0.1 (Current release)
