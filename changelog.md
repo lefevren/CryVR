@@ -2,7 +2,7 @@ CryVR
 =======================
 
 
-Version 0.2 (Next release)  : WiiWork & some VRPN
+Version 0.2 (Next release)  : Stable Wiimote Part Release & VRPN consideration
 -----------------
 
 - Balance Board integration.
@@ -10,20 +10,21 @@ Version 0.2 (Next release)  : WiiWork & some VRPN
 - Wiimote node less CPU dependant.
 - Wiimote as a Plugin for CryEngine 3.5.4
 - VRPN as a Plugin for CryEngine 3.5.4
-- Option Wiimotes nodes : Bluetooth stack, Aspect Ratio, IR sensivity, IR position and status nodes.
+- Optional Wiimotes nodes : Bluetooth stack setup, Aspect Ratio, IR sensivity, IR position and status nodes.
 
 
-Version 0.11 (To come) : WiiWork !
+Version 0.11 (Current unstable release) : WiiWork !
 -----------------
 - Fixing access memory Cryengine crashs
 - Adding WiimoteSetup node 
-- Fixing Nunchuk & Balance board detection
+- Fixing Nunchuk & Balance board detection (force Motion sensing off during connection)
 - Setup default nodes balanced configuration
 - Code optimization
-- Full event detection setup
+- Full event detection setup (timeouts thresholds and angles detection)
+- Roll, pitch and yaw events outputs only one time / frame.
 
 
-Version 0.1 (Current release)
+Version 0.1 (unstable release)
 ----------------------
 
 Initial Release for CryEngine 3.5.4 (32/64 bit).
