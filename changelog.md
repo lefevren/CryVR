@@ -8,7 +8,7 @@ Version 0.2 (first release)  :
 Stable Wiimote Part Release & VRPN consideration
 
 - Balance Board integration
-- Balance board [x,y] {-1;1} gravity output value
+- Balance board [x,y] {-1;1} "gravity center" output value
 - Classic and Guitar Hero nodes integration
 - Wiimote node less CPU dependant
 - Wiimote as a Plugin for CryEngine 3.5.4
