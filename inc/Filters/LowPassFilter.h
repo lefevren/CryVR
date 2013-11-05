@@ -20,7 +20,7 @@ public:
   };
 
   LowPassFilter(double alpha, double initval=0.0) {
-	CryLogAlways("Creation du filtre");
+	//CryLogAlways("Creation du filtre");
 	y = s = initval ;
 	setAlpha(alpha) ;
 	initialized = false ;

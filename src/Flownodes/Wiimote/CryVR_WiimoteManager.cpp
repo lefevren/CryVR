@@ -1,5 +1,8 @@
 /* Wiimote Manager node - for licensing and copyright see license.txt */
 
+/* Todo : Aspect Ratio */
+
+
 #include "StdAfx.h"
 #include "Nodes/G2FlowBaseNode.h"
 #include "Wiimote/CryVR_WiimoteManager.h"
@@ -29,7 +32,13 @@ void CryVR_WiimoteManager::Init(){
 void CryVR_WiimoteManager::Init(bool ir_pos, bool motion, int v_time, float v_angle, int v_threshold){
 	Init();
 	SetIrPosition(ir_pos);
-	SetMotionSensing(motion);
+	
+	
+	//SetMotionSensing(motion);
+	SetMotionSensing(false);
+	
+	
+	
 	SetAccelThreshold(v_threshold, v_angle);								//10	:	events : <10
 																			//1		:	events : >80
 																			//5		:	events : ~40 max
@@ -182,10 +191,10 @@ void CryVR_WiimoteManager::GetConfiguration(SFlowNodeConfig& config){
 		{
 			InputPortConfig<bool>("Activate", _HELP("Initialisation")),
 			InputPortConfig<bool>("Ir_Above",true, _HELP("IR position (Above or below)")),
-			InputPortConfig<bool>("Motion_Sensing",true, _HELP("Motion sensing state")),
+			//InputPortConfig<bool>("Motion_Sensing",true, _HELP("Motion sensing state")),
 			InputPortConfig<int>("Threshold", 1 ,_HELP("Motion sensing state")),
 			InputPortConfig<float>("Angle", 0.5 ,_HELP("Motion sensing state")),
-			InputPortConfig<int>("Timeout", 0.5 ,_HELP("Motion sensing state")),
+			InputPortConfig<int>("Timeout", 20 ,_HELP("Motion sensing state")),
 			{0},
 		};
 
@@ -197,19 +206,60 @@ void CryVR_WiimoteManager::GetConfiguration(SFlowNodeConfig& config){
 
 		config.pInputPorts = inputs;
 		config.pOutputPorts = outputs;
-		config.sDescription = _HELP("Wiimote Manager");
+		config.sDescription = _HELP("Wiimote_Manager");
 		config.SetCategory(EFLN_APPROVED);
 }
 
 
 void CryVR_WiimoteManager::ProcessEvent(EFlowEvent event, SActivationInfo *pActInfo){
 	
-	if(event==eFE_Activate  && IsPortActive(pActInfo,0)) {
-			Init(GetPortBool(pActInfo, 1),GetPortBool(pActInfo, 2),GetPortInt(pActInfo, 3),GetPortFloat(pActInfo, 4),GetPortInt(pActInfo, 5));
-			ActivateOutput(pActInfo, 0, true);
+	//Fait planter la balance board si connexion au port actif 1...
+	/*
+	if(event==eFE_Activate){
+			active = GetPortBool(pActInfo, 0);
+			pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
 	}
+	*/
+	//Fait planter la balance board ici !
+
+	if(event==eFE_Activate  && GetPortBool(pActInfo, 0)) {
+		CryLogAlways("Evenement init wiimote");
+		Init(GetPortBool(pActInfo, 1),GetPortBool(pActInfo, 1),GetPortInt(pActInfo, 2),GetPortFloat(pActInfo, 3),GetPortInt(pActInfo, 4));
+		//Sleep(1000);
+		while (wiiuse_poll(wiimotes, CryVR_WiimoteManager::found)) {	
+			CryLogAlways("Event initial");
+			Status(wiimotes[0]);
+		}
+		ActivateOutput(pActInfo, 0, true);
+	}
+
+
 	
-	
+}
+
+
+void CryVR_WiimoteManager::Status(struct wiimote_t* wm) {
+	CryLogAlways("\n\n--- CONTROLLER STATUS [wiimote id %i] ---\n", wm->unid);
+	CryLogAlways("attachment:      %i\n", wm->exp.type);
+	CryLogAlways("speaker:         %i\n", WIIUSE_USING_SPEAKER(wm));
+	CryLogAlways("ir:              %i\n", WIIUSE_USING_IR(wm));
+	CryLogAlways("leds:            %i %i %i %i\n", WIIUSE_IS_LED_SET(wm, 1), WIIUSE_IS_LED_SET(wm, 2), WIIUSE_IS_LED_SET(wm, 3), WIIUSE_IS_LED_SET(wm, 4));
+	CryLogAlways("battery:         %f %%\n", wm->battery_level);
+}
+
+
+
+void CryVR_WiimoteManager::Status(int id) {
+	if(id<=0 && id>found) {
+		struct wiimote_t* wm = wiimotes[id];
+
+		CryLogAlways("\n\n--- CONTROLLER STATUS [wiimote id %i] ---\n", wm->unid);
+		CryLogAlways("attachment:      %i\n", wm->exp.type);
+		CryLogAlways("speaker:         %i\n", WIIUSE_USING_SPEAKER(wm));
+		CryLogAlways("ir:              %i\n", WIIUSE_USING_IR(wm));
+		CryLogAlways("leds:            %i %i %i %i\n", WIIUSE_IS_LED_SET(wm, 1), WIIUSE_IS_LED_SET(wm, 2), WIIUSE_IS_LED_SET(wm, 3), WIIUSE_IS_LED_SET(wm, 4));
+		CryLogAlways("battery:         %f %%\n", wm->battery_level);
+	}
 }
 
 

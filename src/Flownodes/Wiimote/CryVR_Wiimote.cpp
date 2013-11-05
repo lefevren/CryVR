@@ -146,8 +146,6 @@ public:
 				//handle_ctrl_status(wiimotes[0]);
 				CryLogAlways("OBSOLETE USE WIIMOTE CONTROLER TEST :      %i",wm->exp.type);
 
-				
-				
 				// A commenter
 				switch (wiimotes[0]->event) {
 					case WIIUSE_EVENT:
@@ -513,5 +511,5 @@ void test(struct wiimote_t* wm, byte* data, unsigned short len) {
 
 };
 
-REGISTER_FLOW_NODE("CryVR:Controlers:Wii:WiimoteControler", CFlowWiimoteControler);
+REGISTER_FLOW_NODE("CryVR:Controlers:Wii:WiimoteControlerOBSOLETE", CFlowWiimoteControler);
 

@@ -12,6 +12,10 @@ class CryVR_WiimoteControler : public CFlowBaseNode<eNCT_Instanced>
 {
 public:
 	bool active;
+	bool wiimote_move,nunchuk_move;
+	bool fps_free;
+
+
 	SActivationInfo m_actInfo;
 	int CryVR_WiimoteID;
 	//imote** wiimotes;
@@ -21,6 +25,7 @@ public:
 		EIP_IsServer = 0,
 		EIP_WiimoteID = 1,
 		EIP_MaxEvent = 2,
+		EIP_FPSFREE = 3,
 	};
 
 	enum EOutputPorts
@@ -68,8 +73,9 @@ public:
 		static const SInputPortConfig inputs[] =
 		{
 			InputPortConfig<bool>("Activate", _HELP("Activate")),
-			InputPortConfig<int>("WiimoteID", _HELP("Wiimote ID")),
-			InputPortConfig<int>("MaxEvents", _HELP("Maximum events by frame")),
+			InputPortConfig<int>("WiimoteID",0, _HELP("Wiimote ID")),
+			InputPortConfig<int>("MaxEvents",3,_HELP("Maximum events by frame")),
+			InputPortConfig<bool>("FPS_FREE",false, _HELP("Force Node to execute minimum events")),
 			{ 0 },
 		};
 
@@ -77,7 +83,6 @@ public:
 		static const SOutputPortConfig outputs[] =
 		{
 			OutputPortConfig<string>("Status", _HELP("")),
-			
 			OutputPortConfig<bool>("A", _HELP("")),
 			OutputPortConfig<bool>("B", _HELP("")),
 			OutputPortConfig<bool>("UP", _HELP("")),
@@ -116,6 +121,7 @@ public:
 	{
 		
 		if(event==eFE_Initialize) {
+			m_actInfo = *pActInfo;
 			active = GetPortBool(pActInfo, 0);
 			pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
 		}
@@ -125,30 +131,34 @@ public:
 		if(event==eFE_Update  && active) {
 			
 			int w_id = GetPortInt(pActInfo, 1);
+			if(w_id < 0 || w_id >= CryVR_WiimoteManager::found) return ;
+
+
 			int i=0;
-			wiimote** manettes =  CryVR_WiimoteManager::wiimotes;
+			wiimote** manettes =  CryVR_WiimoteManager::GetWiimotes();
 			
-			//while (wiiuse_poll(manettes, CryVR_WiimoteManager::found) && i<3) {	
+			//Optimisation v0.1
+			wiimote_move = false;
+			nunchuk_move = false;
+			
+
 			while (wiiuse_poll(manettes, CryVR_WiimoteManager::found) && i<GetPortInt(pActInfo, 2)) {	
-				if(CryVR_WiimoteManager::wiimotes[w_id]->event == WIIUSE_EVENT) {
+				if(CryVR_WiimoteManager::GetWiimotes(w_id)->event == WIIUSE_EVENT) {
 					i++;
-					handle_event(CryVR_WiimoteManager::wiimotes[w_id]);
+					handle_event(CryVR_WiimoteManager::GetWiimotes(w_id));
 				}
-			}
+				else if (CryVR_WiimoteManager::GetWiimotes(w_id)->event == WIIUSE_NUNCHUK_INSERTED || CryVR_WiimoteManager::GetWiimotes(w_id)->event == WIIUSE_NUNCHUK_REMOVED){
+					CryVR_WiimoteManager::Status(w_id);
+				}
+				
+				//Recherche d'optimisation.
+				if (nunchuk_move && wiimote_move && GetPortBool(pActInfo, 3)) {
+					
+					return ; 
+				}
 
-			//CryLogAlways("Nombre d'events : %i" ,i);
-		}
-
-		
-		switch (event)
-		{
-		case eFE_Initialize: 
-			{
-				m_actInfo = *pActInfo;
-				break;
 			}
 		}
-		
 	}
 
 	virtual void GetMemoryStatistics(ICrySizer *s){s->Add(*this);}
@@ -156,32 +166,40 @@ public:
 	virtual void GetMemoryUsage(ICrySizer * s) const{s->Add(*this);}
 
 
-
-
-	/**
- *	@brief Callback that handles an event.
- *
- *	@param wm		Pointer to a wiimote_t structure.
- *
- *	This function is called automatically by the wiiuse library when an
- *	event occurs on the specified wiimote.
- */
 	void handle_event(struct wiimote_t* wm) 
 	{
-		//CryLogAlways("\n\n--- EVENT [id %i] ---\n", wm->unid);
+		
+		if(IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_A)) ActivateOutput(&m_actInfo, WIIMOTE_A, true);
+		if(IS_RELEASED(wm, WIIMOTE_BUTTON_A)) ActivateOutput(&m_actInfo, WIIMOTE_A, false);
+		if(IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_B)) ActivateOutput(&m_actInfo, WIIMOTE_B, true);
+		if(IS_RELEASED(wm, WIIMOTE_BUTTON_B)) ActivateOutput(&m_actInfo, WIIMOTE_B, false);
+		
+		if(IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_DOWN)) ActivateOutput(&m_actInfo, WIIMOTE_DOWN, true);
+		if(IS_RELEASED(wm, WIIMOTE_BUTTON_DOWN)) ActivateOutput(&m_actInfo, WIIMOTE_DOWN, false);
+		if(IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_LEFT)) ActivateOutput(&m_actInfo, WIIMOTE_LEFT, true);
+		if(IS_RELEASED(wm, WIIMOTE_BUTTON_LEFT)) ActivateOutput(&m_actInfo, WIIMOTE_LEFT, false);
+		if(IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_RIGHT)) ActivateOutput(&m_actInfo, WIIMOTE_RIGHT, true);
+		if(IS_RELEASED(wm, WIIMOTE_BUTTON_RIGHT)) ActivateOutput(&m_actInfo, WIIMOTE_RIGHT, false);
+		if(IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_UP)) ActivateOutput(&m_actInfo, WIIMOTE_UP, true);
+		if(IS_RELEASED(wm, WIIMOTE_BUTTON_UP)) ActivateOutput(&m_actInfo, WIIMOTE_UP, false);
+		
+		if(IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_MINUS)) ActivateOutput(&m_actInfo, WIIMOTE_MINUS, true);
+		if(IS_RELEASED(wm, WIIMOTE_BUTTON_MINUS)) ActivateOutput(&m_actInfo, WIIMOTE_MINUS, false);
+		if(IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_PLUS)) ActivateOutput(&m_actInfo, WIIMOTE_PLUS, true);
+		if(IS_RELEASED(wm, WIIMOTE_BUTTON_PLUS)) ActivateOutput(&m_actInfo, WIIMOTE_PLUS, false);
+		if(IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_HOME)) ActivateOutput(&m_actInfo, WIIMOTE_HOME, true);
+		if(IS_RELEASED(wm, WIIMOTE_BUTTON_HOME)) ActivateOutput(&m_actInfo, WIIMOTE_HOME, false);
+		
+		if(IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_ONE)) ActivateOutput(&m_actInfo, WIIMOTE_ONE, true);
+		if(IS_RELEASED(wm, WIIMOTE_BUTTON_ONE)) ActivateOutput(&m_actInfo, WIIMOTE_ONE, false);
+		if(IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_TWO)) ActivateOutput(&m_actInfo, WIIMOTE_TWO, true);
+		if(IS_RELEASED(wm, WIIMOTE_BUTTON_TWO)) ActivateOutput(&m_actInfo, WIIMOTE_TWO, false);
+		
 	
-		/* if a button is pressed, report it */
 	
-		if (IS_PRESSED(wm, WIIMOTE_BUTTON_A)) ActivateOutput(&m_actInfo, WIIMOTE_A, true);// else ActivateOutput(&m_actInfo, WIIMOTE_A, false);
-		if (IS_PRESSED(wm, WIIMOTE_BUTTON_B)) ActivateOutput(&m_actInfo, WIIMOTE_B, true);// else ActivateOutput(&m_actInfo, WIIMOTE_A, false);
-		if (IS_PRESSED(wm, WIIMOTE_BUTTON_DOWN)) ActivateOutput(&m_actInfo, WIIMOTE_DOWN, true);// else ActivateOutput(&m_actInfo, WIIMOTE_A, false);
-		if (IS_PRESSED(wm, WIIMOTE_BUTTON_LEFT)) ActivateOutput(&m_actInfo, WIIMOTE_LEFT, true);// else ActivateOutput(&m_actInfo, WIIMOTE_A, false);
-		if (IS_PRESSED(wm, WIIMOTE_BUTTON_RIGHT)) ActivateOutput(&m_actInfo, WIIMOTE_RIGHT, true);// else ActivateOutput(&m_actInfo, WIIMOTE_A, false);
-		if (IS_PRESSED(wm, WIIMOTE_BUTTON_MINUS)) ActivateOutput(&m_actInfo, WIIMOTE_MINUS, true);// else ActivateOutput(&m_actInfo, WIIMOTE_A, false);
-		if (IS_PRESSED(wm, WIIMOTE_BUTTON_PLUS)) ActivateOutput(&m_actInfo, WIIMOTE_PLUS, true);// else ActivateOutput(&m_actInfo, WIIMOTE_A, false);
-	
-	
-		if (WIIUSE_USING_ACC(wm)) {
+		if (WIIUSE_USING_ACC(wm) && !wiimote_move) {
+			//Optimisation v0.1
+			wiimote_move = true;
 			Vec3 orient = Vec3(wm->orient.a_roll,wm->orient.a_pitch,wm->orient.yaw);
 			ActivateOutput(&m_actInfo, WIIMOTE_RPY, orient);
 		}
@@ -202,8 +220,9 @@ public:
 		*/
 		/* show events specific to supported expansions */
 	
-		if (wm->exp.type == EXP_NUNCHUK)
+		if (wm->exp.type == EXP_NUNCHUK && !nunchuk_move)
 		{
+				nunchuk_move = true;
 				struct nunchuk_t* nc = (nunchuk_t*)&wm->exp.nunchuk;
 
 				if (IS_PRESSED(nc, NUNCHUK_BUTTON_C)) {
@@ -226,5 +245,5 @@ public:
 }
 };
 
-REGISTER_FLOW_NODE("CryVR:Controlers:Wii:WiimoteControlerTest",  CryVR_WiimoteControler);
+REGISTER_FLOW_NODE("CryVR:Controlers:Wii:WiimoteControler",  CryVR_WiimoteControler);
 

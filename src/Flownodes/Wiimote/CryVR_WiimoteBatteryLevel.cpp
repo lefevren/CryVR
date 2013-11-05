@@ -61,6 +61,8 @@ public:
 			float retour = CryVR_WiimoteManager::GetBatteryLevel(GetPortInt(pActInfo, 1));
 			ActivateOutput(pActInfo, 0, retour);
 		}
+		
+
 	}
 
 	virtual void GetMemoryStatistics(ICrySizer *s){s->Add(*this);}

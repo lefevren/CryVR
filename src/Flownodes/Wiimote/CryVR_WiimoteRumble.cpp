@@ -18,7 +18,7 @@ public:
 	{
 		EIP_IsServer = 0,
 		EIP_WiimoteID = 1,
-		EIP_WiimoteMotionSensing = 1
+		EIP_WiimoteRumble = 2
 	};
 
 	enum EOutputPorts

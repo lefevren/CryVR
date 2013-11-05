@@ -12,10 +12,15 @@
 
 class CryVR_WiimoteManager : public CFlowBaseNode<eNCT_Instanced>
 {
+
+		static wiimote** wiimotes;
+	
 	public:
+		bool active;
+		
 		static int found;
 		static int connected;
-		static wiimote** wiimotes;
+		
 		static bool init;
 		
 		static int timeout;
@@ -28,7 +33,7 @@ class CryVR_WiimoteManager : public CFlowBaseNode<eNCT_Instanced>
 		{
 			EIP_bActivate = 0,
 			EIP_bIR = 1,
-			EIP_bMotion = 2,
+			//EIP_bMotion = 2,
 			EIP_iThreshold = 3,
 			EIP_iAngle = 4,
 			EIP_iTimeout = 5,
@@ -42,23 +47,37 @@ class CryVR_WiimoteManager : public CFlowBaseNode<eNCT_Instanced>
 
 
 		CryVR_WiimoteManager(SActivationInfo *pActInfo);
+		static wiimote** GetWiimotes(){return wiimotes;}
 		
+		//To avoid array index out of bounds
+		static wiimote* GetWiimotes(int id){
+			if(id<0 || id>= found) {
+				CryLogAlways("Wiimotes index out of bounds ! returning wiimote 0");
+				return wiimotes[0];
+			}
+			return wiimotes[id];
+		}
+
 		/* Init */
 		static void Init();
 		static void Init(bool ir_pos,bool motion, int threshold , float angle, int timeout);						//Init avec paramètres
+		
 
 		/* Leds */
 		static bool SetLeds(int id,int led);					
 		
 		/* Motion Sensing */
 		static bool SetMotionSensing(int id,bool value);		
-		static bool SetMotionSensing(bool value);				//Set pour toutes les wiimotes
+		static bool SetMotionSensing(bool value);				
+		static bool GetMotionSensing(int id){return WIIUSE_USING_ACC(wiimotes[id]);}
 		
 		/* Battery */
 		static float GetBatteryLevel(int id);
 		
 		/* Types */
-		static int GetType(int id);							
+		static int GetType(int id);
+		static void Status(struct wiimote_t* wm);
+		static void Status(int id);
 		
 		/* Rumble */
 		static bool ToggleRumble(int id);			
