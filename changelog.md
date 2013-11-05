@@ -17,7 +17,7 @@ Version 0.11 (To come) : WiiWork !
 -----------------
 - Fixing access memory Cryengine crashs
 - Adding WiimoteSetup node 
-- Fixing BalanceBoard detection
+- Fixing Nunchuk & Balance board detection
 - Setup default nodes balanced configuration
 - Code optimization
 - Full event detection setup
