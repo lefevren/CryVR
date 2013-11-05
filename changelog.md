@@ -2,14 +2,25 @@ CryVR
 =======================
 
 
-Version 0.2 (To come)
+Version 0.2 (Next release)  : WiiWork & some VRPN
 -----------------
 
-- Camera nodes refactoring.
 - Balance Board integration.
+- Classic and Guitar Hero nodes integration
 - Wiimote node less CPU dependant.
 - Wiimote as a Plugin for CryEngine 3.5.4
 - VRPN as a Plugin for CryEngine 3.5.4
+- Option Wiimotes nodes : Bluetooth stack, Aspect Ratio, IR sensivity, IR position and status nodes.
+
+
+Version 0.11 (To come) : WiiWork !
+-----------------
+- Fixing access memory Cryengine crashs
+- Adding WiimoteSetup node 
+- Fixing BalanceBoard detection
+- Setup default nodes balanced configuration
+- Code optimization
+- Full event detection setup
 
 
 Version 0.1 (Current release)
