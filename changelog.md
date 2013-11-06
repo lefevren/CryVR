@@ -30,7 +30,7 @@ Current Debug version : WiiWork !
 - Roll, pitch and yaw events outputs only one time / frame
 
 
-Version 0.1 (Debug)
+Version 0.1 
 ----------------------
 
 Initial Debug for CryEngine 3.5.4 (32/64 bit).
