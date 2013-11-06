@@ -7,19 +7,32 @@ Version 0.2 (first release to come)  :
 
 Stable Wiimote Part Release & VRPN consideration
 
-- Balance Board integration
-- Balance board [x,y] {-1;1} "gravity center" output value
-- Classic and Guitar Hero nodes integration
+
+- Guitar Hero node integration
 - Wiimote node less CPU dependant
 - Wiimote as a Plugin for CryEngine 3.5.4
 - VRPN as a Plugin for CryEngine 3.5.4
 - Optional Wiimotes nodes : Bluetooth stack setup, Aspect Ratio, IR sensivity, IR position and status nodes
 
 
+Version 0.12
+-------------------
+Current Debug version : BalanceBoardWork !
+
+- Balance Board integration
+- Balance Board [x,y] {-1;1} "gravity center" output value
+- Balance Board automatic [0,0] calibration system
+- Balance Board weight output
+- Balance Board AllInOne Node
+- Beta Classic Controler integration
+- Classic Controler AllInOne node
+- Removed motion sensing option from WiimoteManager node (Motion Sensing set to false by default)
+
+
 Version 0.11 
 -----------------
 
-Current Debug version : WiiWork !
+WiiWork !
 
 - Fixing access memory Cryengine crashs
 - Adding WiimoteSetup node 
@@ -35,6 +48,7 @@ Version 0.1
 
 Initial Debug for CryEngine 3.5.4 (32/64 bit).
 
+- Project creation
 - VRPN tracker and wiimote (2x nodes) 
 - Asymetric camera setup (3x nodes) (not user friendly, not usable for the moment)
 - Wiimote controler (8x nodes)
