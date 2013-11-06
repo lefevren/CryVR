@@ -2,7 +2,7 @@ CryVR
 =======================
 
 
-Version 0.2 (first release)  :
+Version 0.2 (first release to come)  :
 -----------------
 
 Stable Wiimote Part Release & VRPN consideration
