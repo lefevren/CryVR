@@ -14,7 +14,9 @@ class CryVR_WiimoteManager : public CFlowBaseNode<eNCT_Instanced>
 {
 
 		static wiimote** wiimotes;
-	
+		
+
+
 	public:
 		bool active;
 		
@@ -26,6 +28,9 @@ class CryVR_WiimoteManager : public CFlowBaseNode<eNCT_Instanced>
 		static int timeout;
 		static int threshold;
 		static float angle_threshold;
+
+		
+		
 
 		SActivationInfo m_actInfo;
 
@@ -91,7 +96,8 @@ class CryVR_WiimoteManager : public CFlowBaseNode<eNCT_Instanced>
 		static bool SetAccelThreshold(int i,float angle);
 		static bool SetTimeout(int value);
 
-			/* FlowNode */
+		
+		/* FlowNode */
 		virtual void ProcessEvent(EFlowEvent event, SActivationInfo *pActInfo);
 		virtual ~CryVR_WiimoteManager(void);
 		virtual void Serialize(SActivationInfo *pActInfo, TSerialize ser);

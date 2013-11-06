@@ -46,7 +46,8 @@ void CryVR_WiimoteManager::Init(bool ir_pos, bool motion, int v_time, float v_an
 																			//3		:	events : ~60
 
 	SetTimeout(timeout);													//20,20	:	events : <10 , 0 si un bouton appuyé
-																			//15,15 :	events : ~3
+	
+	
 }
 
 
@@ -153,7 +154,7 @@ bool CryVR_WiimoteManager::SetMotionSensing(bool value){
 	}
 	return false;
 }
-		
+	
 
 
 bool CryVR_WiimoteManager::SetLeds(int id,int led){

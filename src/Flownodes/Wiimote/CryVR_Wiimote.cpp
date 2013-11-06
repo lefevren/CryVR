@@ -400,35 +400,7 @@ void handle_event(struct wiimote_t* wm) {
 		CryLogAlways("nunchuk joystick magnitude: %f\n", nc->js.mag);
 	} 
 	
-	/*
-	if (wm->exp.type == EXP_CLASSIC) {
-		
-		struct classic_ctrl_t* cc = (classic_ctrl_t*)&wm->exp.classic;
-
-		if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_ZL))			{CryLogAlways("Classic: ZL pressed\n");}
-		if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_B))			{CryLogAlways("Classic: B pressed\n");}
-		if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_Y))			{CryLogAlways("Classic: Y pressed\n");}
-		if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_A))			{CryLogAlways("Classic: A pressed\n");}
-		if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_X))			{CryLogAlways("Classic: X pressed\n");}
-		if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_ZR))			{CryLogAlways("Classic: ZR pressed\n");}
-		if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_LEFT))		{CryLogAlways("Classic: LEFT pressed\n");}
-		if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_UP))			{CryLogAlways("Classic: UP pressed\n");}
-		if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_RIGHT))		{CryLogAlways("Classic: RIGHT pressed\n");}
-		if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_DOWN))		{CryLogAlways("Classic: DOWN pressed\n");}
-		if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_FULL_L))		{CryLogAlways("Classic: FULL L pressed\n");}
-		if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_MINUS))		{CryLogAlways("Classic: MINUS pressed\n");}
-		if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_HOME))		{CryLogAlways("Classic: HOME pressed\n");}
-		if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_PLUS))		{CryLogAlways("Classic: PLUS pressed\n");}
-		if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_FULL_R))		{CryLogAlways("Classic: FULL R pressed\n");}
-
-		CryLogAlways("classic L button pressed:         %f\n", cc->l_shoulder);
-		CryLogAlways("classic R button pressed:         %f\n", cc->r_shoulder);
-		CryLogAlways("classic left joystick angle:      %f\n", cc->ljs.ang);
-		CryLogAlways("classic left joystick magnitude:  %f\n", cc->ljs.mag);
-		CryLogAlways("classic right joystick angle:     %f\n", cc->rjs.ang);
-		CryLogAlways("classic right joystick magnitude: %f\n", cc->rjs.mag);
-	} 
-	*/
+	
 }
 
 /**
