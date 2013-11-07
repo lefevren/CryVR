@@ -15,11 +15,11 @@ wiimote** CryVR_WiimoteManager::wiimotes	= 0;
 int CryVR_WiimoteManager::timeout			= 15;
 int CryVR_WiimoteManager::threshold			= 15;
 float CryVR_WiimoteManager::angle_threshold	= 1;
-
+int CryVR_WiimoteManager::bt = 0;
 
 void CryVR_WiimoteManager::Init(){
 	wiimotes = wiiuse_init(MAX_WIIMOTES); 
-	wiiuse_set_bluetooth_stack(wiimotes, MAX_WIIMOTES, WIIUSE_STACK_MS);
+	SetBluetooth(bt);
 
 	found = wiiuse_find(wiimotes,  MAX_WIIMOTES, 5);
 	connected = wiiuse_connect(wiimotes, MAX_WIIMOTES);
@@ -29,11 +29,12 @@ void CryVR_WiimoteManager::Init(){
 	init = true;
 }
 
-void CryVR_WiimoteManager::Init(bool ir_pos, bool motion, int v_time, float v_angle, int v_threshold){
+void CryVR_WiimoteManager::Init(bool ir_pos, bool motion, int v_time, float v_angle, int v_threshold, int bts, bool aspect, int irlevel){
+	bt=bts;
 	Init();
 	SetIrPosition(ir_pos);
-	
-	
+	SetAspectRatio(aspect);
+	SetIRSensivity(irlevel);
 	//SetMotionSensing(motion);
 	SetMotionSensing(false);
 	
@@ -50,6 +51,50 @@ void CryVR_WiimoteManager::Init(bool ir_pos, bool motion, int v_time, float v_an
 	
 }
 
+bool CryVR_WiimoteManager::Stop() {
+	if (init) {
+		wiiuse_cleanup(wiimotes, found);
+		return true;
+	}
+	return false;
+}
+
+
+bool CryVR_WiimoteManager::SetIRSensivity(int level){
+	if (init) {
+		int irlevel = 3;
+		if(level>=0 && level <=5) irlevel = level; 
+		for(int i=0;i<found;i++) wiiuse_set_ir_sensitivity(wiimotes[i],irlevel);
+		return true;
+	}
+	return false;
+}
+
+bool CryVR_WiimoteManager::SetAspectRatio(bool aspect){
+	if (init) {
+		if(aspect) {
+			for(int i=0;i<found;i++) wiiuse_set_aspect_ratio(wiimotes[i],WIIUSE_ASPECT_16_9);
+		}
+		else for(int i=0;i<found;i++) wiiuse_set_aspect_ratio(wiimotes[i],WIIUSE_ASPECT_4_3);
+		return true;
+	}
+	return false;
+}
+
+void CryVR_WiimoteManager::SetBluetooth(int value){
+	switch (value)
+	{
+	case 1 : {
+				wiiuse_set_bluetooth_stack(wiimotes,found,WIIUSE_STACK_MS);
+				break;
+			 }
+	case 2 : {
+				wiiuse_set_bluetooth_stack(wiimotes,found,WIIUSE_STACK_BLUESOLEIL);
+				break;
+			 }	
+	default: wiiuse_set_bluetooth_stack(wiimotes,found,WIIUSE_STACK_UNKNOWN);
+	}
+}
 
 bool CryVR_WiimoteManager::SetTimeout(int val){
 	if(init && found>0) {
@@ -196,6 +241,9 @@ void CryVR_WiimoteManager::GetConfiguration(SFlowNodeConfig& config){
 			InputPortConfig<int>("Threshold", 1 ,_HELP("Motion sensing state")),
 			InputPortConfig<float>("Angle", 0.5 ,_HELP("Motion sensing state")),
 			InputPortConfig<int>("Timeout", 20 ,_HELP("Motion sensing state")),
+			InputPortConfig<int>("Bluetooth_stack", 0 ,_HELP("Set bluetooth stack [0, Auto] [1, MS] [2, BlueSoleil]")),
+			InputPortConfig<bool>("Aspect_ratio",true, _HELP("Set Aspect Ratio : [false, 4/3] [true, 16/9]")),
+			InputPortConfig<int>("IR_Sensivity", 3 ,_HELP("Set ir sensivity [0;5]")),
 			{0},
 		};
 
@@ -214,23 +262,16 @@ void CryVR_WiimoteManager::GetConfiguration(SFlowNodeConfig& config){
 
 void CryVR_WiimoteManager::ProcessEvent(EFlowEvent event, SActivationInfo *pActInfo){
 	
-	//Fait planter la balance board si connexion au port actif 1...
-	/*
-	if(event==eFE_Activate){
-			active = GetPortBool(pActInfo, 0);
-			pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
-	}
-	*/
-	//Fait planter la balance board ici !
-
+	
 	if(event==eFE_Activate  && GetPortBool(pActInfo, 0)) {
 		CryLogAlways("Evenement init wiimote");
-		Init(GetPortBool(pActInfo, 1),GetPortBool(pActInfo, 1),GetPortInt(pActInfo, 2),GetPortFloat(pActInfo, 3),GetPortInt(pActInfo, 4));
+		Init(GetPortBool(pActInfo, 1),GetPortBool(pActInfo, 1),GetPortInt(pActInfo, 2),GetPortFloat(pActInfo, 3),GetPortInt(pActInfo, 4),GetPortInt(pActInfo,5),GetPortBool(pActInfo,6),GetPortInt(pActInfo,7));
 		//Sleep(1000);
 		while (wiiuse_poll(wiimotes, CryVR_WiimoteManager::found)) {	
 			CryLogAlways("Event initial");
 			Status(wiimotes[0]);
 		}
+
 		ActivateOutput(pActInfo, 0, true);
 	}
 

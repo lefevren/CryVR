@@ -484,4 +484,3 @@ void test(struct wiimote_t* wm, byte* data, unsigned short len) {
 };
 
 REGISTER_FLOW_NODE("CryVR:Controlers:Wii:WiimoteControlerOBSOLETE", CFlowWiimoteControler);
-

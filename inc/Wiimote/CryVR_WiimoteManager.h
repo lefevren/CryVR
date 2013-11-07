@@ -28,7 +28,7 @@ class CryVR_WiimoteManager : public CFlowBaseNode<eNCT_Instanced>
 		static int timeout;
 		static int threshold;
 		static float angle_threshold;
-
+		static int bt;
 		
 		
 
@@ -42,6 +42,9 @@ class CryVR_WiimoteManager : public CFlowBaseNode<eNCT_Instanced>
 			EIP_iThreshold = 3,
 			EIP_iAngle = 4,
 			EIP_iTimeout = 5,
+			EIP_BLUETOOTH = 6,
+			EIP_ASPECT_RATIO = 7,
+			EIP_IRLEVEL = 8,
 		};
 
 		enum EOutputPorts
@@ -65,8 +68,8 @@ class CryVR_WiimoteManager : public CFlowBaseNode<eNCT_Instanced>
 
 		/* Init */
 		static void Init();
-		static void Init(bool ir_pos,bool motion, int threshold , float angle, int timeout);						//Init avec paramètres
-		
+		static void Init(bool ir_pos,bool motion, int threshold , float angle, int timeout,int bluetooth, bool aspect, int irlevel);						//Init avec paramètres
+		static void SetBluetooth(int value);
 
 		/* Leds */
 		static bool SetLeds(int id,int led);					
@@ -92,10 +95,15 @@ class CryVR_WiimoteManager : public CFlowBaseNode<eNCT_Instanced>
 		static bool SetIr(bool value);
 		static bool GetIr(int id);				
 		static bool SetIrPosition(bool above);
-		
+		static bool SetAspectRatio(bool aspect);
+		static bool SetIRSensivity(int level);
+
 		static bool SetAccelThreshold(int i,float angle);
 		static bool SetTimeout(int value);
 
+
+		/* stop */
+		static bool Stop();
 		
 		/* FlowNode */
 		virtual void ProcessEvent(EFlowEvent event, SActivationInfo *pActInfo);
