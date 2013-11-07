@@ -8,8 +8,8 @@ Version 0.2 (first release to come)  :
 
 Stable Wiimote Part Release & VRPN consideration
 
-- Wii devices full integration (10x nodes)
-- Customisable Wii nodes CPU dependancies
+- Wii devices full integration (Stable Wiimote, Motion Plus, Nunchuk, Balance Board. Beta Classic and Guitar Hero 3 devices)(11x nodes)
+- Customisable Wii nodes CPU dependancies (From FPS free to full events detection)
 - Wii devices as a Plugin for CryEngine 3.5.4
 - VRPN as a Plugin for CryEngine 3.5.4
 
@@ -20,6 +20,9 @@ Current Debug version : GuitarHeroWork !
 
 - Beta Guitar Hero 3 controler integration
 - Bluetooth stack, Aspect ratio and IR sensivity settings
+- Modified Wiimote setup node
+- Stop node (Cleanup wiimotes stack)
+- Cpp file management
 
 
 Version 0.15
