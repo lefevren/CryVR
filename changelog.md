@@ -8,17 +8,23 @@ Version 0.2 (first release to come)  :
 
 Stable Wiimote Part Release & VRPN consideration
 
-
-- Guitar Hero node integration
-- Wiimote node less CPU dependant
-- Wii Controlers as a Plugin for CryEngine 3.5.4
+- Wii devices full integration (10x nodes)
+- Customisable Wii nodes CPU dependancies
+- Wii devices as a Plugin for CryEngine 3.5.4
 - VRPN as a Plugin for CryEngine 3.5.4
-- Optional Wiimotes nodes : Bluetooth stack setup, Aspect Ratio, IR sensivity, IR position and status nodes
 
 
-Version 0.12
+Version 0.16
 -------------------
-Current Debug version : BalanceBoardWork !
+Current Debug version : GuitarHeroWork !
+
+- Beta Guitar Hero 3 controler integration
+- Bluetooth stack, Aspect ratio and IR sensivity settings
+
+
+Version 0.15
+-------------------
+BalanceBoardWork !
 
 - Balance Board integration
 - Balance Board [x,y] {-1;1} "gravity center" output value
