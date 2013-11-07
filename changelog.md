@@ -36,7 +36,7 @@ BalanceBoardWork !
 - Removed motion sensing option from WiimoteManager node (Motion Sensing set to false by default)
 
 
-Version 0.11 
+Version 0.12
 -----------------
 
 WiiWork !
