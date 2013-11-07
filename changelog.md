@@ -2,6 +2,7 @@ CryVR
 =======================
 
 
+
 Version 0.2 (first release to come)  :
 -----------------
 
@@ -10,7 +11,7 @@ Stable Wiimote Part Release & VRPN consideration
 
 - Guitar Hero node integration
 - Wiimote node less CPU dependant
-- Wiimote as a Plugin for CryEngine 3.5.4
+- Wii Controlers as a Plugin for CryEngine 3.5.4
 - VRPN as a Plugin for CryEngine 3.5.4
 - Optional Wiimotes nodes : Bluetooth stack setup, Aspect Ratio, IR sensivity, IR position and status nodes
 
