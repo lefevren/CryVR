@@ -1,4 +1,4 @@
-CryVR
+CryVR (Current version :0.16)
 =====
 
 CryVR push CryEngine to virtual reality !
