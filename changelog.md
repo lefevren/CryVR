@@ -19,7 +19,7 @@ Current Debug version : AndroidConsoleAppWork !
 - First Apk file registering full 3.5.4 console variables and commands.
 - Simple console sender from Android to CryEngine (one way)
 - CryEngine Console listener node (based on RenEvo nodes)
-- Unity C# code source
+- Unity C# code source as an Unity package
 
 
 Version 0.16
