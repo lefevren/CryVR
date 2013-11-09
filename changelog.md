@@ -2,21 +2,29 @@ CryVR
 =======================
 
 
-
 Version 0.2 (first release to come)  :
 -----------------
-
-Stable Wiimote Part Release & VRPN consideration
+Stable Wiimote Part Release  
 
 - Wii devices full integration (Stable Wiimote, Motion Plus, Nunchuk, Balance Board. Beta Classic and Guitar Hero 3 devices)(11x nodes)
 - Customisable Wii nodes CPU dependancies (From FPS free to full events detection)
 - Wii devices as a Plugin for CryEngine 3.5.4
-- VRPN as a Plugin for CryEngine 3.5.4
+
+
+
+Version 0.17
+--------------
+Current Debug version : AndroidConsoleAppWork !
+
+- First Apk file registering full 3.5.4 console variables and commands.
+- Simple console sender from Android to CryEngine (one way)
+- CryEngine Console listener node (based on RenEvo nodes)
+- Unity C# code source as an Unity package
 
 
 Version 0.16
 -------------------
-Current Debug version : GuitarHeroWork !
+GuitarHeroWork !
 
 - Beta Guitar Hero 3 controler integration
 - Bluetooth stack, Aspect ratio and IR sensivity settings

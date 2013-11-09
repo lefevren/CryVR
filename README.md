@@ -1,4 +1,4 @@
-CryVR
+CryVR (Current version : 0.16)
 =====
 
 CryVR push CryEngine to virtual reality !
@@ -17,8 +17,7 @@ CryVR gives CryEngine (since 3.5.4 both x86 & x64) virtual reality possibilities
   
   * Filters : One euro filter
 
-
-
+  * Android & IOS : CryEngine ingame control application (console, custom events, 2x XY analogs, GUI elements)
 
 
 
@@ -43,6 +42,7 @@ More
 - Wiimote nodes :  Wiiuse 0.14 near to full integration. Full custom event detection, wiimote & nunchuk, Classic, Balance Board and Guitar Hero integration.
 - VRPN : Need a VRPN server to connect. If the server bring wiimote controler, then VRPNWiimote can be used. 
 
+- UDP connections based onRenEvo Software & Designs UDP listener and sender nodes.
 
 
 
