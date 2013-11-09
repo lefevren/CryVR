@@ -42,7 +42,7 @@ More
 - Wiimote nodes :  Wiiuse 0.14 near to full integration. Full custom event detection, wiimote & nunchuk, Classic, Balance Board and Guitar Hero integration.
 - VRPN : Need a VRPN server to connect. If the server bring wiimote controler, then VRPNWiimote can be used. 
 
-
+- UDP connections based onRenEvo Software & Designs UDP listener and sender nodes.
 
 
 
