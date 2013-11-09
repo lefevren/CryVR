@@ -17,8 +17,7 @@ CryVR gives CryEngine (since 3.5.4 both x86 & x64) virtual reality possibilities
   
   * Filters : One euro filter
 
-
-
+  * Android & IOS : CryEngine ingame control application (console, custom events, 2x XY analogs, GUI elements)
 
 
 
@@ -42,6 +41,7 @@ More
 - One euro filter : Algorithm based on the C++ version of [One euro filter] (http://www.lifl.fr/~casiez/1euro/). This filter help to smooth raw data from VRPN server or Wiimote controler. 4x nodes to smooth float, vec2, vec3 and quaternion values.
 - Wiimote nodes :  Wiiuse 0.14 near to full integration. Full custom event detection, wiimote & nunchuk, Classic, Balance Board and Guitar Hero integration.
 - VRPN : Need a VRPN server to connect. If the server bring wiimote controler, then VRPNWiimote can be used. 
+
 
 
 
