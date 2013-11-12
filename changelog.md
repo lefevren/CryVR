@@ -1,17 +1,6 @@
 CryVR
 =======================
 
-
-Version 0.2 (first release to come)  :
------------------
-Stable Wiimote Part Release  
-
-- Wii devices full integration (Stable Wiimote, Motion Plus, Nunchuk, Balance Board. Beta Classic and Guitar Hero 3 devices)(11x nodes)
-- Customisable Wii nodes CPU dependancies (From FPS free to full events detection)
-- Wii devices as a Plugin for CryEngine 3.5.4
-
-
-
 Version 0.17
 --------------
 Current Debug version : AndroidConsoleAppWork !
