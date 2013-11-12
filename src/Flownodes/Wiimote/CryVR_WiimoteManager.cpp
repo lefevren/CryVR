@@ -167,6 +167,16 @@ bool CryVR_WiimoteManager::GetIr(int id){
 }
 
 
+bool CryVR_WiimoteManager::SetLed(int id, int led){
+	if(init && id<found && id>=0 && led >= 0 && led <=3) {
+		wiiuse_set_leds(wiimotes[id],led);
+		return true;
+	}
+	return false;
+}
+
+
+
 float CryVR_WiimoteManager::GetBatteryLevel(int id){
 	if(init){
 		if(id<found && id>=0) 

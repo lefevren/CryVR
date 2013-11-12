@@ -72,7 +72,8 @@ class CryVR_WiimoteManager : public CFlowBaseNode<eNCT_Instanced>
 		static void SetBluetooth(int value);
 
 		/* Leds */
-		static bool SetLeds(int id,int led);					
+		static bool SetLed(int id,int led);					
+		static bool GetLed(int id);					
 		
 		/* Motion Sensing */
 		static bool SetMotionSensing(int id,bool value);		

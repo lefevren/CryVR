@@ -424,7 +424,70 @@ public:
 };
 
 
-	
+class CryVR_WiimoteLed : public CFlowBaseNode<eNCT_Instanced>
+{
+public:
+
+	enum EInputPorts
+	{
+		EIP_Set = 0,
+		EIP_Get = 1,
+		EIP_WiimoteID = 2,
+		EIP_WiimoteMotionSensing = 3
+	};
+
+	enum EOutputPorts
+	{
+		EOP_Status		
+	};
+
+
+	////////////////////////////////////////////////////
+	CryVR_WiimoteLed(SActivationInfo *pActInfo){}
+	virtual ~ CryVR_WiimoteLed(void){}
+	virtual void Serialize(SActivationInfo *pActInfo, TSerialize ser){}
+
+	virtual void GetConfiguration(SFlowNodeConfig& config)
+	{
+		// Define input ports here, in same order as EInputPorts
+		static const SInputPortConfig inputs[] =
+		{
+			InputPortConfig<bool>("Set", _HELP("Activate")),
+			InputPortConfig<int>("WiimoteID", _HELP("Wiimote id")),
+			InputPortConfig<bool>("Value", _HELP("Led value")),
+			{0},
+		};
+
+		// Define output ports here, in same order as EOutputPorts
+		static const SOutputPortConfig outputs[] =
+		{
+			OutputPortConfig<bool>("Status", _HELP("")),
+			{0},
+		};
+		
+		// Fill in configuration
+		config.pInputPorts = inputs;
+		config.pOutputPorts = outputs;
+		config.sDescription = _HELP("CryVR node to activate / deactivate IR output values");
+		config.SetCategory(EFLN_APPROVED);
+	}
+
+	////////////////////////////////////////////////////
+	virtual void ProcessEvent(EFlowEvent event, SActivationInfo *pActInfo)
+	{
+		if(event==eFE_Activate  && IsPortActive(pActInfo,0)) {
+			bool retour = CryVR_WiimoteManager::SetLed(GetPortInt(pActInfo, 1),GetPortInt(pActInfo, 2));
+			ActivateOutput(pActInfo, 0, retour);
+		}
+	}
+
+	virtual void GetMemoryStatistics(ICrySizer *s){s->Add(*this);}
+	virtual IFlowNodePtr Clone(SActivationInfo *pActInfo){return new  CryVR_WiimoteLed(pActInfo);}
+	virtual void GetMemoryUsage(ICrySizer * s) const{s->Add(*this);}
+
+};
+
+REGISTER_FLOW_NODE("CryVR:Controlers:Wii:WiimoteLed",  CryVR_WiimoteLed);	
 REGISTER_FLOW_NODE("CryVR:Controlers:Wii:WiimoteBatteryLevel",  CryVR_WiimoteBatteryLevel);
 REGISTER_FLOW_NODE("CryVR:Controlers:Wii:WiimoteStop", CFlowWiimoteStop);
 REGISTER_FLOW_NODE("CryVR:Controlers:Wii:WiimoteIR",  CryVR_WiimoteIR);

@@ -41,9 +41,20 @@ More
 - One euro filter : Algorithm based on the C++ version of [One euro filter] (http://www.lifl.fr/~casiez/1euro/). This filter help to smooth raw data from VRPN server or Wiimote controler. 4x nodes to smooth float, vec2, vec3 and quaternion values.
 - Wiimote nodes :  Wiiuse 0.14 near to full integration. Full custom event detection, wiimote & nunchuk, Classic, Balance Board and Guitar Hero integration.
 - VRPN : Need a VRPN server to connect. If the server bring wiimote controler, then VRPNWiimote can be used. 
-
 - UDP connections based onRenEvo Software & Designs UDP listener and sender nodes.
+- Wiimote event detection can be really heavy. Wiimote generates event quickly. Detect all events could be FPS killer (something like 10% worst)
+With good configuration you can get enough events to make it real time response without noticable fps drop down. Depends on system performance.
 
+Wiimote Flownodes :
+------------------
+
+Wiimote Manager : Needed as the first active node. Initialize connection with bluetooth stack. 
+Wiimote Balance Board / Classic / Guitar Hero / Controler nodes : For now, just one at a time. Use this to retrieve devices values inside your flowgraph.
+Wiimote Battery Level : Retreive battery level of the connected device.
+Wiimote IR : Activate / Deactivate / Get IR state.
+Wiimote Rumble : Toogle Rumble for the given device.
+Wiimote Motion Sensing : Activate or deactivate motion sensing for the connected device (off by default)
+Wiimote Setup : Setup wiimote detection events.
 
 
 

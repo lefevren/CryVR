@@ -9,13 +9,15 @@
 #include "vrpn/vrpn_Button.h"
 #include "vrpn/vrpn_Analog.h"
 #include "vrpn/vrpn_WiiMote.h"
-
+#include "vrpn/vrpn_Magellan.h"
 
 
 const string VRPNSERVER = "tracker0@localhost";
 	
 void VRPN_CALLBACK handle_analog_wii(void* userData, const vrpn_ANALOGCB a ){*(vrpn_ANALOGCB*)userData=a;}
 void VRPN_CALLBACK handle_button_change_wii( void* userData, const vrpn_BUTTONCB b ){*(vrpn_BUTTONCB*)userData = b;}
+
+
 
 class CFlowNode_VRPNWiimote : public CFlowBaseNode<eNCT_Instanced>
 {
@@ -124,6 +126,8 @@ public:
 	////////////////////////////////////////////////////
 	virtual void ProcessEvent(EFlowEvent event, SActivationInfo *pActInfo)
 	{
+		
+
 		
 		
 		int butt= 0;
