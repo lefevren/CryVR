@@ -22,7 +22,7 @@ public:
 
 	enum EInputPorts
 	{
-		EIP_IsServer = 0,
+		EIP_Activate = 0,
 		EIP_WiimoteID = 1,
 		EIP_MaxEvent = 2,
 		EIP_FPSFREE = 3,

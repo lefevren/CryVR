@@ -25,7 +25,7 @@ public:
 	
 	enum EInputPorts
 	{
-		EIP_IsServer = 0,
+		EIP_Activater = 0,
 		EIP_WiimoteID = 1,
 		EIP_USE_CALIB = 2,
 	};

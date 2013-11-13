@@ -167,16 +167,6 @@ bool CryVR_WiimoteManager::GetIr(int id){
 }
 
 
-bool CryVR_WiimoteManager::SetLed(int id, int led){
-	if(init && id<found && id>=0 && led >= 0 && led <=3) {
-		wiiuse_set_leds(wiimotes[id],led);
-		return true;
-	}
-	return false;
-}
-
-
-
 float CryVR_WiimoteManager::GetBatteryLevel(int id){
 	if(init){
 		if(id<found && id>=0) 
@@ -212,7 +202,7 @@ bool CryVR_WiimoteManager::SetMotionSensing(bool value){
 	
 
 
-bool CryVR_WiimoteManager::SetLeds(int id,int led){
+bool CryVR_WiimoteManager::SetLed(int id,int led){
 	if(init) {
 		switch (led) {
 			case 1 : 
@@ -248,9 +238,9 @@ void CryVR_WiimoteManager::GetConfiguration(SFlowNodeConfig& config){
 			InputPortConfig<bool>("Activate", _HELP("Initialisation")),
 			InputPortConfig<bool>("Ir_Above",true, _HELP("IR position (Above or below)")),
 			//InputPortConfig<bool>("Motion_Sensing",true, _HELP("Motion sensing state")),
-			InputPortConfig<int>("Threshold", 1 ,_HELP("Motion sensing state")),
-			InputPortConfig<float>("Angle", 0.5 ,_HELP("Motion sensing state")),
-			InputPortConfig<int>("Timeout", 20 ,_HELP("Motion sensing state")),
+			InputPortConfig<int>("Threshold", 1 ,_HELP("Threshold event generation")),
+			InputPortConfig<float>("Angle", 0.5 ,_HELP("Angle event generation")),
+			InputPortConfig<int>("Timeout", 20 ,_HELP("Event TTL in ms")),
 			InputPortConfig<int>("Bluetooth_stack", 0 ,_HELP("Set bluetooth stack [0, Auto] [1, MS] [2, BlueSoleil]")),
 			InputPortConfig<bool>("Aspect_ratio",true, _HELP("Set Aspect Ratio : [false, 4/3] [true, 16/9]")),
 			InputPortConfig<int>("IR_Sensivity", 3 ,_HELP("Set ir sensivity [0;5]")),
@@ -278,7 +268,7 @@ void CryVR_WiimoteManager::ProcessEvent(EFlowEvent event, SActivationInfo *pActI
 		Init(GetPortBool(pActInfo, 1),GetPortBool(pActInfo, 1),GetPortInt(pActInfo, 2),GetPortFloat(pActInfo, 3),GetPortInt(pActInfo, 4),GetPortInt(pActInfo,5),GetPortBool(pActInfo,6),GetPortInt(pActInfo,7));
 		//Sleep(1000);
 		while (wiiuse_poll(wiimotes, CryVR_WiimoteManager::found)) {	
-			CryLogAlways("Event initial");
+			CryLogAlways("Initial Event");
 			Status(wiimotes[0]);
 		}
 

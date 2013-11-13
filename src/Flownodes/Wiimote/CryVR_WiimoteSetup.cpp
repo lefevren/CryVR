@@ -11,7 +11,7 @@ class CFlowWiimoteSetup : public CFlowBaseNode<eNCT_Instanced>
 {
 	enum EInputPorts
 	{
-		EIP_IsServer = 0,
+		EIP_Activate = 0,
 		EIP_WiimoteID = 1,
 		EIP_WiimoteThreshold = 2,
 		EIP_WiimoteAngle = 3,
@@ -62,7 +62,7 @@ public:
 		// Fill in configuration
 		config.pInputPorts = inputs;
 		config.pOutputPorts = outputs;
-		config.sDescription = _HELP("FG node that set wiimote nodes");
+		config.sDescription = _HELP("FG node that setup WiiDevices nodes");
 		config.SetCategory(EFLN_APPROVED);
 	}
 
@@ -99,7 +99,7 @@ public:
 
 	enum EInputPorts
 	{
-		EIP_IsServer = 0,
+		EIP_Activate = 0,
 		EIP_WiimoteID = 1,
 		EIP_WiimoteMotionSensing = 2
 	};
@@ -183,7 +183,7 @@ public:
 		// Define input ports here, in same order as EInputPorts
 		static const SInputPortConfig inputs[] =
 		{
-			InputPortConfig<bool>("Toogle", _HELP("Activate")),
+			InputPortConfig<bool>("Toogle", _HELP("Toogle rumble")),
 			InputPortConfig<int>("WiimoteID", _HELP("Wiimote id")),
 			{0},
 		};
@@ -198,7 +198,7 @@ public:
 		// Fill in configuration
 		config.pInputPorts = inputs;
 		config.pOutputPorts = outputs;
-		config.sDescription = _HELP("CryVR node to set rumble");
+		config.sDescription = _HELP("CryVR node to toogle rumble");
 		config.SetCategory(EFLN_APPROVED);
 	}
 
@@ -387,7 +387,7 @@ public:
 		// Define input ports here, in same order as EInputPorts
 		static const SInputPortConfig inputs[] =
 		{
-			InputPortConfig<bool>("Get", _HELP("Activate")),
+			InputPortConfig<bool>("Get", _HELP("Get battery level")),
 			InputPortConfig<int>("WiimoteID", _HELP("Wiimote id")),
 			{0},
 		};

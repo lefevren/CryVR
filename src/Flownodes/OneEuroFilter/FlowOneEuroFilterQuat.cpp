@@ -41,28 +41,28 @@ public:
 	////////////////////////////////////////////////////
 	virtual void GetConfiguration(SFlowNodeConfig& config)
 	{
-		// Define input ports here, in same order as EInputPorts
-		static const SInputPortConfig inputs[] =
-		{
-			InputPortConfig<bool> ("Active", _HELP("Activation")),
-			InputPortConfig<Vec3> ("Valeur_x_y_z",Vec3(0,0,0), _HELP("Valeur a filtrer")),
-			InputPortConfig<float> ("Valeur_w",0, _HELP("Valeur a filtrer")),
-			{0},
-		};
+		 // Define input ports here, in same order as EInputPorts
+            static const SInputPortConfig inputs[] =
+            {
+                InputPortConfig<bool> ( "Activate", _HELP( "Activation" ) ),
+                InputPortConfig<Vec3> ( "xyz_value", Vec3( 0, 0, 0 ), _HELP( "XYZ quaternion part to filter" ) ),
+                InputPortConfig<float> ( "w_value", 0, _HELP( "W quaternion part to filter" ) ),
+                {0},
+            };
 
-		// Define output ports here, in same order as EOutputPorts
-		static const SOutputPortConfig outputs[] =
-		{
-			OutputPortConfig<Vec3> ("Valeur_filtre_x_y_z", _HELP("Fov courrant")),
-			OutputPortConfig<float> ("Valeur_filtre_w", _HELP("Fov courrant")),
-			{0},
-		};
-		
-		// Fill in configuration
-		config.pInputPorts = inputs;
-		config.pOutputPorts = outputs;
-		config.sDescription = _HELP("FG node that sets up a CAVE environment");
-		config.SetCategory(EFLN_APPROVED);
+            // Define output ports here, in same order as EOutputPorts
+            static const SOutputPortConfig outputs[] =
+            {
+                OutputPortConfig<Vec3> ( "FilteredValue_xyz", _HELP( "Filtered XYZ quaternion part" ) ),
+                OutputPortConfig<float> ( "FilteredValue_w", _HELP( "Filtered W quaternion part" ) ),
+                {0},
+            };
+
+            // Fill in configuration
+            config.pInputPorts = inputs;
+            config.pOutputPorts = outputs;
+            config.sDescription = _HELP( "FG node that sets up a CAVE environment" );
+            config.SetCategory( EFLN_APPROVED );
 	}
 
 	

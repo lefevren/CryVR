@@ -9,7 +9,7 @@
 #include "vrpn/vrpn_Button.h"
 #include "vrpn/vrpn_Analog.h"
 #include "vrpn/vrpn_WiiMote.h"
-#include "vrpn/vrpn_Magellan.h"
+#include "vrpn/vrpn_Tracker_RazerHydra.h"
 
 
 const string VRPNSERVER = "tracker0@localhost";
@@ -128,8 +128,6 @@ public:
 	{
 		
 
-		
-		
 		int butt= 0;
 
 		switch (event)

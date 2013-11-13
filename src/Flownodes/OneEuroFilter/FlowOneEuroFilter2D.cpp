@@ -35,26 +35,26 @@ public:
 	////////////////////////////////////////////////////
 	virtual void GetConfiguration(SFlowNodeConfig& config)
 	{
-		// Define input ports here, in same order as EInputPorts
-		static const SInputPortConfig inputs[] =
-		{
-			InputPortConfig<bool> ("Active", _HELP("Activation")),
-			InputPortConfig<Vec3> ("Valeur",Vec3(0,0,0), _HELP("Valeur a filtrer")),
-			{0},
-		};
+		 // Define input ports here, in same order as EInputPorts
+            static const SInputPortConfig inputs[] =
+            {
+                InputPortConfig<bool> ( "Activate", _HELP( "Activation" ) ),
+                InputPortConfig<Vec3> ( "Value", Vec3( 0, 0, 0 ), _HELP( "Value to filter" ) ),
+                {0},
+            };
 
-		// Define output ports here, in same order as EOutputPorts
-		static const SOutputPortConfig outputs[] =
-		{
-			OutputPortConfig<Vec3> ("Valeur filtree", _HELP("Fov courrant")),
-			{0},
-		};
-		
-		// Fill in configuration
-		config.pInputPorts = inputs;
-		config.pOutputPorts = outputs;
-		config.sDescription = _HELP("FG node that sets up a CAVE environment");
-		config.SetCategory(EFLN_APPROVED);
+            // Define output ports here, in same order as EOutputPorts
+            static const SOutputPortConfig outputs[] =
+            {
+                OutputPortConfig<Vec3> ( "FilteredValue", _HELP( "Filtered value" ) ),
+                {0},
+            };
+
+            // Fill in configuration
+            config.pInputPorts = inputs;
+            config.pOutputPorts = outputs;
+            config.sDescription = _HELP( "CryVR node that filter a Vec2 with OneEuro filter" );
+            config.SetCategory( EFLN_APPROVED );
 	}
 
 	
