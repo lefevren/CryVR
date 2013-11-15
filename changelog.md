@@ -1,9 +1,28 @@
 CryVR
 =======================
 
+
+Version 0.17.5
+------------------
+MathematicsWork !
+
+- Adding Quaternion flip support and ModFloat for One Euro Filter
+- Adding Euler to Quaternion, Quaternion to direction and Quaternion to Euler converters nodes
+- Adding EntitySimpleOrientation and EntitySimpleTransform (debug) nodes
+
+
+Version 0.17.1
+---------------
+Current buggy version : HandledDeviceWork !
+
+- HandledDevice : Send Gyroscope, compass and accelerometer from IOS or Android to CryEngine
+- Formated Message to send integers, floats, Vec2, Vec3 and Quaternions from handled device to CryEngine
+- Added SetLed node to wiimote manager
+- Corrected English translation from different inputs and outputs nodes.
+
 Version 0.17
 --------------
-Current Debug version : AndroidConsoleAppWork !
+AndroidConsoleAppWork !
 
 - First Apk file registering full 3.5.4 console variables and commands.
 - Simple console sender from Android to CryEngine (one way)
