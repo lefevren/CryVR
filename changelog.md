@@ -6,11 +6,8 @@ Version 0.17.5
 ------------------
 MathematicsWork !
 
-- Adding Quaternion flip support for One Euro Filter
-- Adding Euler to Quaternion converter node
-- Adding Quaternion to direction node
-- Adding Quaternion to Euler node
-- Adding ModuloFloat node for One Euro Filter
+- Adding Quaternion flip support and ModFloat for One Euro Filter
+- Adding Euler to Quaternion, Quaternion to direction and Quaternion to Euler converters nodes
 - Adding EntitySimpleOrientation and EntitySimpleTransform (debug) nodes
 
 
