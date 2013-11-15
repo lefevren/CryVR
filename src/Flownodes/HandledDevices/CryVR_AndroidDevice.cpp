@@ -66,7 +66,6 @@ public:
 			OutputPortConfig<string>("Status", _HELP("UDP socket successfully opened for listening")), 
 			OutputPortConfig<Vec3>("Gyroscope_xyz", _HELP("Gyroscope xyz value")),
 			OutputPortConfig<float>("Gyroscope_w", _HELP("Gyroscope w value")),
-			OutputPortConfig<Vec3>("Gyroscope_direction", _HELP("Gyroscope quaternion as direction")),
 			OutputPortConfig<Vec3>("Accelerometer", _HELP("Accelerometer vec3")),
 			OutputPortConfig<float>("Compass", _HELP("Compass float angle")),
 			{0},
@@ -140,16 +139,7 @@ public:
 				string token2 = udpListener->GetToken(2);
 				float compass = udpListener->TokenToFloat(token2);
 				
-				/* Attention, changement de repère ! */
-				/* Unity vs cryengine */
-				//Quat qu;
-				//qu.SetRotationX(3.141592/2);
-				//gyro = qu * gyro;
-
-				//Matrix33 mm = Matrix33(Vec3(1,0,0),Vec3(0,0,-1),Vec3(0,1,0));
-			
-				//gyro = gyro.
-				//Ajouter une entity et tenter de faire une rotation directe avec le quaternion...
+				//if(!gyro.IsValid()) CryLogAlways("NOT VALID");
 
 				ActivateOutput(pActInfo, EOP_Gyro_xyz, Vec3(gyro.v.x,gyro.v.y,gyro.v.z));
 				ActivateOutput(pActInfo, EOP_Gyro_w, gyro.w);

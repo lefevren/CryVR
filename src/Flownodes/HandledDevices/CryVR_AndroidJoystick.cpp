@@ -1,4 +1,4 @@
-/* Console listener node - for licensing and copyright see license.txt */
+/* TouchDevices node - for licensing and copyright see license.txt */
 
 #include "StdAfx.h"
 
@@ -7,22 +7,35 @@
 #include "Nodes/G2FlowBaseNode.h"
 
 ////////////////////////////////////////////////////
-class CryVR_AndroidEvents : public CFlowBaseNode<eNCT_Instanced>
+class CryVR_AndroidJoystick : public CFlowBaseNode<eNCT_Instanced>
 {
+	
 	enum EInputPorts
 	{
 		EIP_Enable,
 		EIP_Disable,
 		EIP_Port, 
-		EIP_Relative,
 	};
 
 	enum EOutputs
 	{
 		EOP_Status = 0,
-		EOP_Command,
-		EOP_Variable,
-		EOP_Params,
+		EOP_JoyLeft,
+		EOP_JoyRight,
+		EOP_JoyTop,
+		EOP_JoyBottom,
+		EOP_button0,
+		EOP_button1,
+		EOP_button2,
+		EOP_button3,
+		EOP_button4,
+		EOP_button5,
+		EOP_button6,
+		EOP_button8,
+		EOP_button9,
+		EOP_button10,
+		EOP_button11,
+		EOP_finger12,
 	};
 	
 	UdpListener* udpListener;
@@ -31,14 +44,13 @@ class CryVR_AndroidEvents : public CFlowBaseNode<eNCT_Instanced>
 
 public:
 	////////////////////////////////////////////////////
-	CryVR_AndroidEvents(SActivationInfo *pActInfo)
+	CryVR_AndroidJoystick(SActivationInfo *pActInfo)
 	{
 		udpListener = new UdpListener();
 	}
 
-	
 	////////////////////////////////////////////////////
-	virtual ~CryVR_AndroidEvents(void)
+	virtual ~CryVR_AndroidJoystick(void)
 	{
 		if (udpListener->IsWorking())udpListener->EndSocket();
 	}
@@ -54,7 +66,7 @@ public:
 		{
 			InputPortConfig<bool>("Enable", _HELP("Enable receiving signals")),
 			InputPortConfig<bool>("Disable", _HELP("Enable receiving signals")),
-			InputPortConfig<int>("Port", 26002, _HELP("Port number"), 0,0),
+			InputPortConfig<int>("Port", 26001, _HELP("Port number"), 0,0),
 			{0},
 		};
 
@@ -62,16 +74,30 @@ public:
 		static const SOutputPortConfig outputs[] =
 		{
 			OutputPortConfig<string>("Status", _HELP("UDP socket successfully opened for listening")), 
-			OutputPortConfig<Vec3>("Command", _HELP("First fingerId value")),
-			OutputPortConfig<Vec3>("Variable", _HELP("Second fingerId value")),
-			OutputPortConfig<Vec3>("Params", _HELP("params or value for command and variable")),
+			OutputPortConfig<Vec3>("Joystick0", _HELP("First xy value")),
+			OutputPortConfig<Vec3>("Joystick1", _HELP("Second xy value")),
+			OutputPortConfig<Vec3>("Joystick2", _HELP("Third xy value")),
+			OutputPortConfig<Vec3>("Joystick3", _HELP("Fourth xy value")),
+			OutputPortConfig<bool>("Button0", _HELP("Button 0")),
+			OutputPortConfig<bool>("Button1", _HELP("Button 1")),
+			OutputPortConfig<bool>("Button2", _HELP("Button 2")),
+			OutputPortConfig<bool>("Button3", _HELP("Button 3")),
+			OutputPortConfig<bool>("Button4", _HELP("Button 4")),
+			OutputPortConfig<bool>("Button5", _HELP("Button 5")),
+			OutputPortConfig<bool>("Button6", _HELP("Button 6")),
+			OutputPortConfig<bool>("Button7", _HELP("Button 7")),
+			OutputPortConfig<bool>("Button8", _HELP("Button 8")),
+			OutputPortConfig<bool>("Button9", _HELP("Button 9")),
+			OutputPortConfig<bool>("Button10", _HELP("Button 10")),
+			OutputPortConfig<bool>("Button11", _HELP("Button 11")),
+			OutputPortConfig<bool>("Button12", _HELP("Button 12")),
 			{0},
 		};
 
 		// Fill in configuration
 		config.pInputPorts = inputs;
 		config.pOutputPorts = outputs;
-		config.sDescription = _HELP("Opens a UDP listener and retrieve events from handled device");
+		config.sDescription = _HELP("Opens a UDP listener and retrieve joystick data");
 		//config.SetCategory(EFLN_ADVANCED);
 	}
 
@@ -118,7 +144,7 @@ public:
 	}
 
 	////////////////////////////////////////////////////
-	virtual IFlowNodePtr Clone(SActivationInfo *pActInfo){return new CryVR_AndroidEvents(pActInfo);}
+	virtual IFlowNodePtr Clone(SActivationInfo *pActInfo){return new CryVR_AndroidJoystick(pActInfo);}
 	virtual void GetMemoryUsage(ICrySizer * s) const{s->Add(*this);}
 	virtual void GetMemoryStatistics(ICrySizer *s){s->Add(*this);}
 
@@ -130,9 +156,39 @@ public:
 		if (udpListener->IsWorking()) {
 			if (udpListener->ReceiveLine() != -1) {
 				
-				
-				/* Todo */
-				
+				int fingers = udpListener->GetTokenCount();
+				/* todo ! 
+				switch (fingers)
+				{
+				case 5:{
+					string token4 = udpListener->GetToken(4);
+					Vec3 finger4 = udpListener->TokenToVec3(token4);
+					ActivateOutput(pActInfo, EOP_finger3, finger4);
+					}
+				case 4:{
+					string token3 = udpListener->GetToken(3);
+					Vec3 finger3 = udpListener->TokenToVec3(token3);
+					ActivateOutput(pActInfo, EOP_finger3, finger3);
+					}
+				case 3:{
+					string token2 = udpListener->GetToken(2);
+					Vec3 finger2 = udpListener->TokenToVec3(token2);
+					ActivateOutput(pActInfo, EOP_finger2, finger2);
+					}
+				case 2:{
+					string token1 = udpListener->GetToken(1);
+					Vec3 finger1 = udpListener->TokenToVec3(token1);
+					ActivateOutput(pActInfo, EOP_finger1, finger1);
+					}
+
+				case 1:{
+					string token0 = udpListener->GetToken(0);
+					Vec3 finger0 = udpListener->TokenToVec3(token0);
+					ActivateOutput(pActInfo, EOP_finger0, finger0);
+					}
+				default : break;
+				}
+				*/
 				bResult = true;
 			}
 		}
@@ -143,5 +199,5 @@ public:
 
 };
 
-REGISTER_FLOW_NODE("CryVR:HandledDevices:EventsListener", CryVR_AndroidEvents);
+REGISTER_FLOW_NODE("CryVR:HandledDevices:JoystickListener", CryVR_AndroidJoystick);
 
