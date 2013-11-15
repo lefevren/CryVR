@@ -2,6 +2,16 @@ CryVR
 =======================
 
 
+Version 0.17.5
+------------------
+MathematicsWork !
+
+- Adding Quaternion flip support for One Euro Filter
+- Adding Ang3 filter node for One Euro Filter
+- Adding ModuloFloat node for One Euro Filter
+- Adding EntitySimpleOrientation and EntitySimpleTransform nodes
+
+
 Version 0.17.1
 ---------------
 Current buggy version : HandledDeviceWork !
@@ -10,7 +20,6 @@ Current buggy version : HandledDeviceWork !
 - Formated Message to send integers, floats, Vec2, Vec3 and Quaternions from handled device to CryEngine
 - Added SetLed node to wiimote manager
 - Corrected translation from different inputs and outputs nodes.
-
 
 Version 0.17
 --------------
