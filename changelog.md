@@ -2,6 +2,22 @@ CryVR
 =======================
 
 
+
+Version 0.2 (To come)
+---------------
+First HandledDevice stable release 
+
+- Handled device control in a VRPN style with special console and internal hardware listener nodes
+- Apk sample file for ArmV7+ 
+- Full Unity3D C# source code 
+
+Version 0.17.6
+--------------
+Current buggy version : VRPNHandledWork !
+
+- Changed to VRPN style handled device control. Buttons node, Analogs node and Tracker nodes added. Events and joystick nodes deleted. 
+
+
 Version 0.17.5
 ------------------
 MathematicsWork !
@@ -13,7 +29,7 @@ MathematicsWork !
 
 Version 0.17.1
 ---------------
-Current buggy version : HandledDeviceWork !
+HandledDeviceWork !
 
 - HandledDevice : Send Gyroscope, compass and accelerometer from IOS or Android to CryEngine
 - Formated Message to send integers, floats, Vec2, Vec3 and Quaternions from handled device to CryEngine
