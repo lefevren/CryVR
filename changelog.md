@@ -15,7 +15,7 @@ Version 0.17.6
 --------------
 Current buggy version : VRPNHandledWork !
 
-- Changed to VRPN style handled device control. Buttons node, Analogs node and Tracker nodes added. Events and joystick nodes deleted. joytsic
+- Changed to VRPN style handled device control. Buttons node, Analogs node and Tracker nodes added. Events and joystick nodes deleted. 
 
 
 Version 0.17.5
