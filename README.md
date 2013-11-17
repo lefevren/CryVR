@@ -17,7 +17,7 @@ CryVR gives CryEngine (since 3.5.4 both x86 & x64) virtual reality possibilities
   
   * Filters : One euro filter
 
-  * Android & IOS : CryEngine ingame control application (console, custom events, 2x XY analogs, GUI elements)
+  * Networked control: CryEngine ingame control application in a VPRN style : Buttons (bool values), Analogs (float values) and Trackers (Vec3 values)
 
 
 
