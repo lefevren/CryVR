@@ -1,4 +1,5 @@
-/* Console listener node - for licensing and copyright see license.txt */
+/* TouchDevices node - for licensing and copyright see license.txt */
+// [CryVR][id:x,y,z]*
 
 #include "StdAfx.h"
 
@@ -7,8 +8,9 @@
 #include "Nodes/G2FlowBaseNode.h"
 
 ////////////////////////////////////////////////////
-class CryVR_AndroidEvents : public CFlowBaseNode<eNCT_Instanced>
+class CryVR_AndroidTracker : public CFlowBaseNode<eNCT_Instanced>
 {
+	
 	enum EInputPorts
 	{
 		EIP_Enable,
@@ -20,25 +22,30 @@ class CryVR_AndroidEvents : public CFlowBaseNode<eNCT_Instanced>
 	enum EOutputs
 	{
 		EOP_Status = 0,
-		EOP_Command,
-		EOP_Variable,
-		EOP_Params,
+		EOP_finger0,
+		EOP_finger1,
+		EOP_finger2,
+		EOP_finger3,
+		EOP_finger4,
+		EOP_finger5,
 	};
 	
 	UdpListener* udpListener;
 	bool m_bEnabled;
 	CTimeValue m_lastTime;
+	Vec3* tab_state ;
 
 public:
 	////////////////////////////////////////////////////
-	CryVR_AndroidEvents(SActivationInfo *pActInfo)
+	CryVR_AndroidTracker(SActivationInfo *pActInfo)
 	{
+		tab_state = new Vec3[5];
 		udpListener = new UdpListener();
 	}
 
 	
 	////////////////////////////////////////////////////
-	virtual ~CryVR_AndroidEvents(void)
+	virtual ~CryVR_AndroidTracker(void)
 	{
 		if (udpListener->IsWorking())udpListener->EndSocket();
 	}
@@ -54,7 +61,8 @@ public:
 		{
 			InputPortConfig<bool>("Enable", _HELP("Enable receiving signals")),
 			InputPortConfig<bool>("Disable", _HELP("Enable receiving signals")),
-			InputPortConfig<int>("Port", 26002, _HELP("Port number"), 0,0),
+			InputPortConfig<int>("Port", 26001, _HELP("Port number"), 0,0),
+			InputPortConfig<bool>("RelativePosition", _HELP("Relative from first sent position ?")),
 			{0},
 		};
 
@@ -62,16 +70,18 @@ public:
 		static const SOutputPortConfig outputs[] =
 		{
 			OutputPortConfig<string>("Status", _HELP("UDP socket successfully opened for listening")), 
-			OutputPortConfig<Vec3>("Command", _HELP("First fingerId value")),
-			OutputPortConfig<Vec3>("Variable", _HELP("Second fingerId value")),
-			OutputPortConfig<Vec3>("Params", _HELP("params or value for command and variable")),
+			OutputPortConfig<Vec3>("Tracker0", _HELP("1st tracker value")),
+			OutputPortConfig<Vec3>("Tracker1", _HELP("2nd tracker value")),
+			OutputPortConfig<Vec3>("Tracker2", _HELP("3rd tracker value")),
+			OutputPortConfig<Vec3>("Tracker3", _HELP("4th tracker value")),
+			OutputPortConfig<Vec3>("Tracker4", _HELP("5th tracker value")),
 			{0},
 		};
 
 		// Fill in configuration
 		config.pInputPorts = inputs;
 		config.pOutputPorts = outputs;
-		config.sDescription = _HELP("Opens a UDP listener and retrieve events from handled device");
+		config.sDescription = _HELP("Opens a UDP listener and retrieve tracker (x,y,z) data");
 		//config.SetCategory(EFLN_ADVANCED);
 	}
 
@@ -80,6 +90,10 @@ public:
 	{
 		switch (event)
 		{
+		case eFE_Initialize : {
+							  for (int i=0;i<5;i++) tab_state[i] = Vec3(0,0,0);
+							  break;
+							  }
 			case eFE_Activate:
 			{
 				if (IsPortActive(pActInfo, EIP_Enable)) {
@@ -118,7 +132,7 @@ public:
 	}
 
 	////////////////////////////////////////////////////
-	virtual IFlowNodePtr Clone(SActivationInfo *pActInfo){return new CryVR_AndroidEvents(pActInfo);}
+	virtual IFlowNodePtr Clone(SActivationInfo *pActInfo){return new CryVR_AndroidTracker(pActInfo);}
 	virtual void GetMemoryUsage(ICrySizer * s) const{s->Add(*this);}
 	virtual void GetMemoryStatistics(ICrySizer *s){s->Add(*this);}
 
@@ -130,18 +144,26 @@ public:
 		if (udpListener->IsWorking()) {
 			if (udpListener->ReceiveLine() != -1) {
 				
+				int fingers = udpListener->GetTokenCount();
 				
-				/* Todo */
-				
+				for(int i=0;i<fingers;i++){
+					string token = udpListener->GetToken(i);
+					Vec3 pos = udpListener->TokenToVec3(token);
+					int id = udpListener->GetId(token);
+					
+					
+					if(tab_state[id]!=pos) {
+						tab_state[id] = pos;
+						ActivateOutput(pActInfo,id+1,pos);
+					}
+				}
 				bResult = true;
 			}
 		}
-	
-		//if (bResult) ActivateOutput(pActInfo, EOP_Received, true);
 		return;
 	}
 
 };
 
-REGISTER_FLOW_NODE("CryVR:HandledDevices:EventsListener", CryVR_AndroidEvents);
+REGISTER_FLOW_NODE("CryVR:HandledDevices:TrackerListener", CryVR_AndroidTracker);
 

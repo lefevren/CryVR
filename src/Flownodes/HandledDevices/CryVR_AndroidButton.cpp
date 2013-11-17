@@ -1,5 +1,6 @@
 /* TouchDevices node - for licensing and copyright see license.txt */
-
+//Message type : [CryVR][id:NewState][id:NewState]...
+				
 #include "StdAfx.h"
 
 //#include "process.h"
@@ -7,7 +8,7 @@
 #include "Nodes/G2FlowBaseNode.h"
 
 ////////////////////////////////////////////////////
-class CryVR_AndroidTouch : public CFlowBaseNode<eNCT_Instanced>
+class CryVR_AndroidButton : public CFlowBaseNode<eNCT_Instanced>
 {
 	
 	enum EInputPorts
@@ -15,34 +16,43 @@ class CryVR_AndroidTouch : public CFlowBaseNode<eNCT_Instanced>
 		EIP_Enable,
 		EIP_Disable,
 		EIP_Port, 
-		EIP_Relative,
 	};
 
 	enum EOutputs
 	{
 		EOP_Status = 0,
-		EOP_finger0,
-		EOP_finger1,
-		EOP_finger2,
-		EOP_finger3,
-		EOP_finger4,
-		EOP_finger5,
+		EOP_button0,
+		EOP_button1,
+		EOP_button2,
+		EOP_button3,
+		EOP_button4,
+		EOP_button5,
+		EOP_button6,
+		EOP_button7,
+		EOP_button8,
+		EOP_button9,
+		EOP_button10,
+		EOP_button11,
 	};
 	
 	UdpListener* udpListener;
 	bool m_bEnabled;
 	CTimeValue m_lastTime;
 
+	bool* tab_state;
+
+
 public:
 	////////////////////////////////////////////////////
-	CryVR_AndroidTouch(SActivationInfo *pActInfo)
+	CryVR_AndroidButton(SActivationInfo *pActInfo)
 	{
 		udpListener = new UdpListener();
+		tab_state = new bool[12];
 	}
 
 	
 	////////////////////////////////////////////////////
-	virtual ~CryVR_AndroidTouch(void)
+	virtual ~CryVR_AndroidButton(void)
 	{
 		if (udpListener->IsWorking())udpListener->EndSocket();
 	}
@@ -58,8 +68,7 @@ public:
 		{
 			InputPortConfig<bool>("Enable", _HELP("Enable receiving signals")),
 			InputPortConfig<bool>("Disable", _HELP("Enable receiving signals")),
-			InputPortConfig<int>("Port", 26001, _HELP("Port number"), 0,0),
-			InputPortConfig<bool>("RelativePosition", _HELP("Relative from first sent position ?")),
+			InputPortConfig<int>("Port", 26010, _HELP("Port number"), 0,0),
 			{0},
 		};
 
@@ -67,18 +76,25 @@ public:
 		static const SOutputPortConfig outputs[] =
 		{
 			OutputPortConfig<string>("Status", _HELP("UDP socket successfully opened for listening")), 
-			OutputPortConfig<Vec3>("Touch0", _HELP("First fingerId value")),
-			OutputPortConfig<Vec3>("Touch1", _HELP("Second fingerId value")),
-			OutputPortConfig<Vec3>("Touch2", _HELP("Third fingerId value")),
-			OutputPortConfig<Vec3>("Touch3", _HELP("Fourth fingerId value")),
-			OutputPortConfig<Vec3>("Touch4", _HELP("Fifth fingerId value")),
+			OutputPortConfig<bool>("Button0", _HELP("First Button0 activation")),
+			OutputPortConfig<bool>("Button1", _HELP("First Button1 activation")),
+			OutputPortConfig<bool>("Button2", _HELP("First Button2 activation")),
+			OutputPortConfig<bool>("Button3", _HELP("First Button3 activation")),
+			OutputPortConfig<bool>("Button4", _HELP("First Button4 activation")),
+			OutputPortConfig<bool>("Button5", _HELP("First Button5 activation")),
+			OutputPortConfig<bool>("Button6", _HELP("First Button6 activation")),
+			OutputPortConfig<bool>("Button7", _HELP("First Button7 activation")),
+			OutputPortConfig<bool>("Button8", _HELP("First Button8 activation")),
+			OutputPortConfig<bool>("Button9", _HELP("First Button9 activation")),
+			OutputPortConfig<bool>("Button10", _HELP("First Button10 activation")),
+			OutputPortConfig<bool>("Button11", _HELP("First Button11 activation")),
 			{0},
 		};
 
 		// Fill in configuration
 		config.pInputPorts = inputs;
 		config.pOutputPorts = outputs;
-		config.sDescription = _HELP("Opens a UDP listener and retrieve fingers data");
+		config.sDescription = _HELP("Opens a UDP listener and retrieve buttons data as bool value");
 		//config.SetCategory(EFLN_ADVANCED);
 	}
 
@@ -125,7 +141,7 @@ public:
 	}
 
 	////////////////////////////////////////////////////
-	virtual IFlowNodePtr Clone(SActivationInfo *pActInfo){return new CryVR_AndroidTouch(pActInfo);}
+	virtual IFlowNodePtr Clone(SActivationInfo *pActInfo){return new CryVR_AndroidButton(pActInfo);}
 	virtual void GetMemoryUsage(ICrySizer * s) const{s->Add(*this);}
 	virtual void GetMemoryStatistics(ICrySizer *s){s->Add(*this);}
 
@@ -137,38 +153,23 @@ public:
 		if (udpListener->IsWorking()) {
 			if (udpListener->ReceiveLine() != -1) {
 				
-				int fingers = udpListener->GetTokenCount();
+				int buttons = udpListener->GetTokenCount();
 				
-				switch (fingers)
-				{
-				case 5:{
-					string token4 = udpListener->GetToken(4);
-					Vec3 finger4 = udpListener->TokenToVec3(token4);
-					ActivateOutput(pActInfo, EOP_finger3, finger4);
+				for (int i=0;i<buttons;i++){
+					string token = udpListener->GetToken(i);
+					//CryLogAlways("%s",token);
+					int id = udpListener->GetId(token);
+					bool state = udpListener->TokenToBool(token);
+					if(id>=12) {
+						CryLogAlways("Index array out of bounds");
+						break;
 					}
-				case 4:{
-					string token3 = udpListener->GetToken(3);
-					Vec3 finger3 = udpListener->TokenToVec3(token3);
-					ActivateOutput(pActInfo, EOP_finger3, finger3);
+					if(tab_state[id] != state){
+						tab_state[id] = state;
+						ActivateOutput(pActInfo,(id+1),state);
 					}
-				case 3:{
-					string token2 = udpListener->GetToken(2);
-					Vec3 finger2 = udpListener->TokenToVec3(token2);
-					ActivateOutput(pActInfo, EOP_finger2, finger2);
-					}
-				case 2:{
-					string token1 = udpListener->GetToken(1);
-					Vec3 finger1 = udpListener->TokenToVec3(token1);
-					ActivateOutput(pActInfo, EOP_finger1, finger1);
-					}
-
-				case 1:{
-					string token0 = udpListener->GetToken(0);
-					Vec3 finger0 = udpListener->TokenToVec3(token0);
-					ActivateOutput(pActInfo, EOP_finger0, finger0);
-					}
-				default : break;
 				}
+				
 				bResult = true;
 			}
 		}
@@ -179,5 +180,5 @@ public:
 
 };
 
-REGISTER_FLOW_NODE("CryVR:HandledDevices:TouchListener", CryVR_AndroidTouch);
+REGISTER_FLOW_NODE("CryVR:HandledDevices:ButtonListener", CryVR_AndroidButton);
 

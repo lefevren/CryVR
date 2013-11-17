@@ -1,4 +1,5 @@
 /* HandledDevices node - for licensing and copyright see license.txt */
+/* Special node to obtain Gyro and other internal data values */
 
 #include "StdAfx.h"
 
@@ -22,7 +23,6 @@ class CryVR_AndroidDevice : public CFlowBaseNode<eNCT_Instanced>
 		EOP_Status = 0,
 		EOP_Gyro_xyz,
 		EOP_Gyro_w,
-		EOP_Gyro_dir,
 		EOP_Accel,
 		EOP_Compass,
 	};
@@ -143,7 +143,6 @@ public:
 
 				ActivateOutput(pActInfo, EOP_Gyro_xyz, Vec3(gyro.v.x,gyro.v.y,gyro.v.z));
 				ActivateOutput(pActInfo, EOP_Gyro_w, gyro.w);
-				ActivateOutput(pActInfo, EOP_Gyro_dir, gyro.GetColumn1());
 				
 				ActivateOutput(pActInfo, EOP_Accel, accel);
 				ActivateOutput(pActInfo, EOP_Compass, compass);

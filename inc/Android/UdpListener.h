@@ -38,9 +38,11 @@ public :
 	//AndroidDevice node
 	int GetTokenCount();
 	string GetToken(int i); //i is the index of the vector. message could contain more than 1 Vec3
+	int GetId(string token);
 	Vec3 TokenToVec3(string token);
 	Vec3 TokenToVec2(string token);
 	Quat TokenToQuat(string token);
+	bool TokenToBool(string token);
 	int TokenToInt(string token);
 	float TokenToFloat(string token);
 	

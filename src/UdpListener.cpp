@@ -151,10 +151,25 @@ string UdpListener::GetToken(int index){
 	return message.substr(indice,indice_fin-indice);
 }
 
+int UdpListener::GetId(string token){
+	string data = token.substr(1,token.length()-2);
+	
+
+	int indiceId = data.find(":");
+	string chaine = data.substr(0,indiceId);
+	//CryLogAlways("Indice : %s valeur indice : %s",data,chaine);
+	int indice = atoi(chaine);
+		
+	return indice;
+}
+
+
 Vec3 UdpListener::TokenToVec3(string token){
 	string data = token.substr(1,token.length()-2); // A tester
-	if(data.substr(0,4)!="Vec3") return Vec3(0,0,0);
-	data = data.substr(5,data.length()-5);
+	//if(data.substr(0,4)!="Vec3") return Vec3(0,0,0);
+	int indiceId = data.find(":");
+	
+	data = data.substr(indiceId+1);
 	
 	int indice = data.find(",");
 	float x = (float)atof(data.substr(0,indice));
@@ -199,6 +214,16 @@ Quat UdpListener::TokenToQuat(string token){
 
 
 
+bool UdpListener::TokenToBool(string token){
+	string data = token.substr(1,token.length()-1);
+	int indiceId = data.find(":");
+
+	//int indice = data.find("]",indiceId+1);
+	//CryLogAlways("valeur : %s",(data.substr(indiceId+1).MakeLower()));
+	bool  x = (data.substr(indiceId+1).MakeLower()) == "true";
+	return x;
+}
+
 int UdpListener::TokenToInt(string token){
 	string data = token.substr(1,token.length()-2); // A tester
 	if(data.substr(0,3)!="Int") return -12345678;
@@ -212,12 +237,12 @@ int UdpListener::TokenToInt(string token){
 
 float UdpListener::TokenToFloat(string token){
 	string data = token.substr(1,token.length()-2); // A tester
-	if(data.substr(0,5)!="Float") return -12345678;
-	data = data.substr(6,data.length()-6);
-	int indice = data.find(",");
-	float x = (float)atof(data.substr(0,indice));
+	int indiceId = data.find(":");
+	float x = (float)atof(data.substr(indiceId+1));
 	return x;
 }
+
+
 
 Vec3 UdpListener::TokenToVec2(string token){
 	//Sup first and last char

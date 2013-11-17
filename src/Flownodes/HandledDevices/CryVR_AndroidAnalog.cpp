@@ -1,4 +1,5 @@
-/* Console listener node - for licensing and copyright see license.txt */
+/* Analog device node - for licensing and copyright see license.txt */
+// [CryVR][id:newX]*
 
 #include "StdAfx.h"
 
@@ -7,8 +8,9 @@
 #include "Nodes/G2FlowBaseNode.h"
 
 ////////////////////////////////////////////////////
-class CryVR_AndroidGenericUI : public CFlowBaseNode<eNCT_Instanced>
+class CryVR_AndroidAnalog : public CFlowBaseNode<eNCT_Instanced>
 {
+	
 	enum EInputPorts
 	{
 		EIP_Enable,
@@ -20,25 +22,35 @@ class CryVR_AndroidGenericUI : public CFlowBaseNode<eNCT_Instanced>
 	enum EOutputs
 	{
 		EOP_Status = 0,
-		EOP_Command,
-		EOP_Variable,
-		EOP_Params,
+		EOP_Analog0,
+		EOP_Analog1,
+		EOP_Analog2,
+		EOP_Analog3,
+		EOP_Analog4,
+		EOP_Analog5,
+		EOP_Analog6,
+		EOP_Analog7,
+		EOP_Analog8,
+		EOP_Analog9,
+		
 	};
 	
 	UdpListener* udpListener;
 	bool m_bEnabled;
+	float* current_values;
 	CTimeValue m_lastTime;
 
 public:
 	////////////////////////////////////////////////////
-	CryVR_AndroidGenericUI(SActivationInfo *pActInfo)
+	CryVR_AndroidAnalog(SActivationInfo *pActInfo)
 	{
+		
 		udpListener = new UdpListener();
 	}
 
 	
 	////////////////////////////////////////////////////
-	virtual ~CryVR_AndroidGenericUI(void)
+	virtual ~CryVR_AndroidAnalog(void)
 	{
 		if (udpListener->IsWorking())udpListener->EndSocket();
 	}
@@ -54,7 +66,8 @@ public:
 		{
 			InputPortConfig<bool>("Enable", _HELP("Enable receiving signals")),
 			InputPortConfig<bool>("Disable", _HELP("Enable receiving signals")),
-			InputPortConfig<int>("Port", 26002, _HELP("Port number"), 0,0),
+			InputPortConfig<int>("Port", 26001, _HELP("Port number"), 0,0),
+			InputPortConfig<bool>("RelativePosition", _HELP("Relative from first sent position ?")),
 			{0},
 		};
 
@@ -62,16 +75,23 @@ public:
 		static const SOutputPortConfig outputs[] =
 		{
 			OutputPortConfig<string>("Status", _HELP("UDP socket successfully opened for listening")), 
-			OutputPortConfig<Vec3>("Command", _HELP("First fingerId value")),
-			OutputPortConfig<Vec3>("Variable", _HELP("Second fingerId value")),
-			OutputPortConfig<Vec3>("Params", _HELP("params or value for command and variable")),
+			OutputPortConfig<float>("Analog0", _HELP("1st analog value")),
+			OutputPortConfig<float>("Analog1", _HELP("2nd analog value")),
+			OutputPortConfig<float>("Analog2", _HELP("3rd analog value")),
+			OutputPortConfig<float>("Analog3", _HELP("4th analog value")),
+			OutputPortConfig<float>("Analog4", _HELP("5th analog value")),
+			OutputPortConfig<float>("Analog5", _HELP("6th analog value")),
+			OutputPortConfig<float>("Analog6", _HELP("7th analog value")),
+			OutputPortConfig<float>("Analog7", _HELP("8th analog value")),
+			OutputPortConfig<float>("Analog8", _HELP("9th analog value")),
+			OutputPortConfig<float>("Analog9", _HELP("10th analog value")),
 			{0},
 		};
 
 		// Fill in configuration
 		config.pInputPorts = inputs;
 		config.pOutputPorts = outputs;
-		config.sDescription = _HELP("Opens a UDP listener and retrieve console commands and variables");
+		config.sDescription = _HELP("Opens a UDP listener and retrieve up to 10 analog data");
 		//config.SetCategory(EFLN_ADVANCED);
 	}
 
@@ -80,6 +100,12 @@ public:
 	{
 		switch (event)
 		{
+		case eFE_Initialize : 
+			{
+				current_values = new float[5];
+				for(int i = 0 ;i<5;i++) current_values[i]= 0;
+				break;
+			}
 			case eFE_Activate:
 			{
 				if (IsPortActive(pActInfo, EIP_Enable)) {
@@ -118,7 +144,7 @@ public:
 	}
 
 	////////////////////////////////////////////////////
-	virtual IFlowNodePtr Clone(SActivationInfo *pActInfo){return new CryVR_AndroidGenericUI(pActInfo);}
+	virtual IFlowNodePtr Clone(SActivationInfo *pActInfo){return new CryVR_AndroidAnalog(pActInfo);}
 	virtual void GetMemoryUsage(ICrySizer * s) const{s->Add(*this);}
 	virtual void GetMemoryStatistics(ICrySizer *s){s->Add(*this);}
 
@@ -130,18 +156,29 @@ public:
 		if (udpListener->IsWorking()) {
 			if (udpListener->ReceiveLine() != -1) {
 				
-				
-				/* Todo */
-				
+				int analogs = udpListener->GetTokenCount();
+				CryLogAlways("Nombre d'event %i",analogs);
+				for(int i=0;i<analogs;i++){
+					string token = udpListener->GetToken(i);
+					float value = udpListener->TokenToFloat(token);
+					
+					int id = udpListener->GetId(token);
+					if(id >= 10) {
+						CryLogAlways("Error index out of bounds : token %s ",token);
+						return;
+					}
+
+					if(current_values[id]!=value){
+						current_values[id] = value;
+						ActivateOutput(pActInfo,id+1,value);
+					}
+				}
 				bResult = true;
 			}
 		}
-	
-		//if (bResult) ActivateOutput(pActInfo, EOP_Received, true);
 		return;
 	}
-
 };
 
-REGISTER_FLOW_NODE("CryVR:HandledDevices:GenericUIListener", CryVR_AndroidGenericUI);
+REGISTER_FLOW_NODE("CryVR:HandledDevices:AnalogListener", CryVR_AndroidAnalog);
 

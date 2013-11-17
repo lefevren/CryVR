@@ -1,4 +1,5 @@
 /* Console listener node - for licensing and copyright see license.txt */
+/* Special node that listen to console commands and variables */
 
 #include "StdAfx.h"
 
