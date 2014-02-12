@@ -2,9 +2,9 @@
 
 /* A faire
 
-Integrer le script dans le gestionnaire CTK
-Ajouter un modificateur de peinture par passe, pour sauvegarder
-forcer une passe si nb_faces > 5000
+Run it using : PeindreSelection <selection_array> <pass_count> dist:<max_distance> lisser:<smooth_count>
+
+
 */
 
 rollout mon_roll "Progression AO -> Vertex" (
