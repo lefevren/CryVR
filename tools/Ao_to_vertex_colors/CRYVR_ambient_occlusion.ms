@@ -2,8 +2,9 @@
 
 /* A faire
 
-Run it using : PeindreSelection <selection_array> <pass_count> dist:<max_distance> lisser:<smooth_count>
-
+Integrer le script dans le gestionnaire CTK
+Ajouter un modificateur de peinture par passe, pour sauvegarder
+forcer une passe si nb_faces > 5000
 */
 
 rollout mon_roll "Progression AO -> Vertex" (
@@ -78,7 +79,7 @@ function FormFactor indiceEmetteur indiceReceveur tab_normale tab_surface tab_po
 	cosR = dot (RcvToEmt) (tab_normale[indiceReceveur])
 		
 		--print (cosE * cosR * tab_surface[indiceEmetteur] / (Pi * dist * dist * tab_surface[indiceEmetteur]))
-	if (cosE >= 0 and cosR >= 0) then valeur = cosE * cosR * tab_surface[indiceEmetteur] / (Pi * dist * dist * tab_surface[indiceEmetteur])
+	if (cosE >= 0 and cosR >= 0) then valeur = cosE * cosR * tab_surface[indiceEmetteur] / (Pi * dist * dist + tab_surface[indiceEmetteur])
 	
 	valeur
 )
@@ -159,36 +160,6 @@ function selectIndice tab valeur = (
 
 
 
-function PeindreAO obj tab_occ precision:20 lisser:1= (
-	tab_occ_lisse = lissagePeinture obj tab_occ nb_lissage:lisser
-	
-	for i=0 to precision do (
-		p = (1.0*i/precision*1.0)
-		tab_bit_array = selectIndice tab_occ_lisse p
-		couleur = (Color (255  * p) (255  * p) (255  * p))
-		polyOp.setVertColor obj 0 (tab_bit_array as bitarray) couleur	
-	)
-	
-	tab_occ_lisse	
-)
-
-
-function PeintureAO obj nbpasse precisionLissage:20 dist:0.25 lisser:1=(
-	--tt = timestamp() 
-	with redraw off( 
-		with undo off(
-			tab_occ = CreerOcclusion obj nbpasse dist
-			if (lisser >= 1 ) then tab_occ = PeindreAO obj tab_occ precision:precisionLissage lisser:lisser
-			else PeindreAO obj tab_occ precision:precisionLissage lisser:0
-		)
-	)
-	--tt2 =timestamp() 
-	
-	--print ("duree : " + (tt2-tt) as string)
-	
-	tab_occ
-)
-
 function lissagePeinture obj tab_occ nb_lissage:1 precision:20= (
 	if (nb_lissage<1) then return tab_occ
 	
@@ -225,6 +196,39 @@ function lissagePeinture obj tab_occ nb_lissage:1 precision:20= (
 	if(nb_lissage >1 ) then lissagePeinture obj tab_occ_new nb_lissage:(nb_lissage-1) precision:precision
 	--tab_occ_new
 )
+
+
+function PeindreAO obj tab_occ precision:20 lisser:1= (
+	tab_occ_lisse = lissagePeinture obj tab_occ nb_lissage:lisser
+	
+	for i=0 to precision do (
+		p = (1.0*i/precision*1.0)
+		tab_bit_array = selectIndice tab_occ_lisse p
+		couleur = (Color (255  * p) (255  * p) (255  * p))
+		polyOp.setVertColor obj 0 (tab_bit_array as bitarray) couleur	
+	)
+	
+	tab_occ_lisse	
+)
+
+
+function PeintureAO obj nbpasse precisionLissage:20 dist:0.25 lisser:1=(
+	--tt = timestamp() 
+	with redraw off( 
+		with undo off(
+			tab_occ = CreerOcclusion obj nbpasse dist
+			if (lisser >= 1 ) then tab_occ = PeindreAO obj tab_occ precision:precisionLissage lisser:lisser
+			else PeindreAO obj tab_occ precision:precisionLissage lisser:0
+		)
+	)
+	--tt2 =timestamp() 
+	
+	--print ("duree : " + (tt2-tt) as string)
+	
+	tab_occ
+)
+
+
 
 function PeindreObjet obj nbpasse precisionLissage:20 dist:0.25 lisser:1=(
 		with redraw off( 
