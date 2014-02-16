@@ -7,6 +7,8 @@ Run it using : PeindreSelection <selection_array> <pass_count> dist:<max_distanc
  
 */
 
+
+
 rollout mon_roll "Progression AO -> Vertex" (
 	label label_face "Face" pos:[5,5] width:150 height:16
 	label label_face_indice "/" pos:[210,5] width:80 height:16
@@ -289,6 +291,29 @@ function SupprimerPeinture = (
 )
 
 
+
+rollout mon_roll_gui "Ao to vertex" (
+	--PeindreSelection tab_obj nb_passe precisionLissage:20 dist:0.25 lisser:1
+	
+	group "Baking" (
+		spinner distan "Distance max"  range:[0,50000,15] fieldWidth:50 pos:[10,20] 
+		spinner passe "Pass count" fieldWidth:50 range:[1,3,1] type:#integer ticks:1 width:50 pos:[75,45]
+	)
+	
+	spinner lisseur "Smooth pass" fieldWidth:50 range:[1,5,3] type:#integer ticks:1 width:50 pos:[80,75]
+	button lancement "Bake Ao for selected objects" pos:[20,100]
+	
+	on lancement pressed do (
+		if (selection.count >0) then PeindreSelection (selection as array) passe.value dist:distan.value lisser:lisseur.value
+	)
+)
+
+	
+function CreateGuiRun = (
+	createDialog  mon_roll_gui  200 130
+)
+
+CreateGuiRun()
 
 
 
