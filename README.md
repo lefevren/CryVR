@@ -24,7 +24,7 @@ CryVR gives CryEngine (since 3.5.4 both x86 & x64) virtual reality possibilities
 Included library
 ================
 - Wiiuse integration (x86 and x64 lib and dll in vs2012 version)
-- VRPN library integration (x86 and x64 lib and dll in vs2012 version)
+- VRPN library integration (7.31 version x86 and x64 lib for vs2012 and vs2013. 7.26 x86 and x64 for vs2010)
 
 
 Infos
