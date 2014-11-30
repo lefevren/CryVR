@@ -66,8 +66,14 @@ public:
 		case eFE_Activate:
 			{
 				if ( IsPortActive( pActInfo, ACTIVE ) ){
+					CryLogAlways("Port active");
+
 					active = GetPortBool( pActInfo, ACTIVE);
+					CryLogAlways("Active ok");
+
 					pActInfo->pGraph->SetRegularlyUpdated(pActInfo->myID,true);
+					CryLogAlways("Regular update ok");
+
 				}
 			
 			}
@@ -79,13 +85,18 @@ public:
 					if (!active) return;
 				
 					CCamera cam = gEnv->pSystem->GetViewCamera();
-					Vec3 resultat = Vec3(0,0,0);
-					bool isVisible = cam.Project(GetPortVec3(pActInfo,0),resultat);
-					float distance = GetPortVec3(pActInfo,0).GetDistance(cam.GetPosition());
+					CryLogAlways("Camera ok");
 					
-					ActivateOutput(pActInfo, VEC_PROJ_POS,resultat);
-					ActivateOutput(pActInfo, FLOAT_DISTANCE,distance);
-					ActivateOutput(pActInfo, IS_VISIBLE,isVisible);
+						Vec3 resultat = Vec3(10,10,10);
+						bool isVisible = cam.Project(GetPortVec3(pActInfo,1),resultat);
+						float distance = GetPortVec3(pActInfo,1).GetDistance(cam.GetPosition());
+						
+						ActivateOutput(pActInfo, VEC_PROJ_POS,resultat);
+						
+						ActivateOutput(pActInfo, FLOAT_DISTANCE,distance);
+						
+						ActivateOutput(pActInfo, IS_VISIBLE,isVisible);
+						
 					
 			}
 		}
